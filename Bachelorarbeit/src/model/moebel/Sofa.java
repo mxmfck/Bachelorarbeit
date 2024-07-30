@@ -1,4 +1,4 @@
-package model.Moebel;
+package model.moebel;
 
 import model.Moebelstueck;
 
