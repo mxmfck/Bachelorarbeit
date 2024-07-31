@@ -1,0 +1,6 @@
+/bin/
+.DS_Store*
+.project*
+.classspath+
+org.eclipse.core.resources.prefs*
+org.eclipse.jdt.core.prefs*
