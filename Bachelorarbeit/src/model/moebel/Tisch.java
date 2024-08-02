@@ -49,4 +49,29 @@ public class Tisch extends Moebelstueck{
 		return stuehleRechts;
 	}
 	
+	public void setAnzahlStuehle(int anzahlStuehle) {
+		this.anzahlStuehle = anzahlStuehle;
+	}
+	
+	public void setStuehle(List<Stuhl> stuehle) {
+		this.stuehle = stuehle;
+	}
+	
+	public void setStuehleOben(boolean stuehleOben) {
+		this.stuehleOben = stuehleOben;
+	}
+	
+	public void setStuehleUnten(boolean stuehleUnten) {
+		this.stuehleUnten = stuehleUnten;
+	}
+	
+	public void setStuehleLinks(boolean stuehleLinks) {
+		this.stuehleLinks = stuehleLinks;
+	}
+	
+	public void setStuehleRechts(boolean stuehleRechts) {
+		this.stuehleRechts = stuehleRechts;
+	}
+	
+	
 }
