@@ -11,9 +11,9 @@ public class Haus {
 	private Raum flur;
 	private List<Tuer> tueren;
 
-	public Haus(String filePath) {
+	public Haus(String path) {
 		try {
-			FileParser.parseHaus(filePath, this);
+			FileParser.parseHaus(path, this);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
