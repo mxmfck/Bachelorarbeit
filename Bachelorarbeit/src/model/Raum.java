@@ -9,13 +9,19 @@ public abstract class Raum {
 	private List<Moebelstueck> moebel;
 	private double groesse;
 	private List<Tuer> tueren;
+	private String name;	// Zur Identifikation des Raumes
 	
-	public Raum(double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
+	public Raum(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
+		this.name = name;
 		this.laenge = laenge;
 		this.breite = breite;
 		this.moebel = moebel;
 		this.tueren = tueren;
 		this.groesse = laenge * breite;
+	}
+	
+	public Raum() {
+		
 	}
 	
 	public double getLaenge() {
@@ -46,4 +52,19 @@ public abstract class Raum {
 		this.tueren.add(tuer);
 	}
 	
+	public void setLaenge(double laenge) {
+		this.laenge = laenge;
+	}
+	
+	public void setBreite(double breite) {
+		this.breite = breite;
+	}
+	
+	public void setGroesse(double groesse) {
+		this.groesse = groesse;
+	}
+	
+	public String getName() {
+		return name;
+	}
 }

@@ -8,8 +8,8 @@ import model.Tuer;
 
 public class Flur extends Raum{
 
-	public Flur(double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
-		super(laenge, breite, moebel, tueren);
+	public Flur(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
+		super(name, laenge, breite, moebel, tueren);
 	}
 
 	

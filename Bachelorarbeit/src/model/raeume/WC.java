@@ -8,8 +8,8 @@ import model.Tuer;
 
 public class WC extends Raum{
 
-	public WC(double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
-		super(laenge, breite, moebel, tueren);
+	public WC(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
+		super(name, laenge, breite, moebel, tueren);
 	}
 
 	
