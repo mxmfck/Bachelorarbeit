@@ -10,13 +10,17 @@ import model.Haus;
 import model.Moebelstueck;
 import model.Raum;
 import model.Tuer;
+import model.moebel.Arbeitsplatte;
 import model.moebel.Badewanne;
 import model.moebel.Bett;
 import model.moebel.Dusche;
 import model.moebel.Herd;
 import model.moebel.Kommode;
+import model.moebel.Kuehlschrank;
 import model.moebel.Nachttisch;
+import model.moebel.Ofen;
 import model.moebel.Schrank;
+import model.moebel.Schreibtisch;
 import model.moebel.Sessel;
 import model.moebel.Sofa;
 import model.moebel.Spuele;
@@ -45,9 +49,9 @@ public class FileParser {
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line.endsWith(":")) {
-					if (aktuellerRaum != null) {
-						haus.addRaum(aktuellerRaum);
-					}
+//					if (aktuellerRaum != null) {
+//						haus.addRaum(aktuellerRaum);
+//					}
 					String raumName = line.substring(0, line.length() - 1);
 					aktuellerRaum = createRaum(reader, raumName, aktuelleTueren);
 					if (aktuellerRaum != null) {
@@ -72,7 +76,7 @@ public class FileParser {
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
 			if (line.isEmpty()) { // removed || line.endsWith(":")
-				reader.reset();
+//				reader.reset();
 				break;
 			}
 			switch (line.split(":")[0]) {
@@ -107,6 +111,8 @@ public class FileParser {
 			raum = new WC(raumName, laenge, breite, moebel, null);
 		} else if (raumName.startsWith("Kinderzimmer")) {
 			raum = new Kinderzimmer(raumName, laenge, breite, moebel, null);
+		} else if (raumName.startsWith("Küche")) {
+			raum = new Kueche(raumName, laenge, breite, moebel, null);
 		} else {
 			System.err.println("Unbekannter Raum: " + raumName);
 		}
@@ -117,7 +123,7 @@ public class FileParser {
 		String line;
 		while ((line = reader.readLine()) != null && !line.endsWith(":") && !line.isEmpty()) { // added &&
 			line = line.trim();
-			if (line.isEmpty()) { // removed  || line.endsWith(":")
+			if (line.isEmpty()) { // removed || line.endsWith(":")
 //				reader.reset();
 				break;
 			}
@@ -171,6 +177,14 @@ public class FileParser {
 				moebel.add(new Sessel(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
 			} else if (line.startsWith("Spüle")) {
 				moebel.add(new Spuele(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+			} else if (line.startsWith("Kühlschrank")) {
+				moebel.add(new Kuehlschrank(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+			} else if (line.startsWith("Ofen")) {
+				moebel.add(new Ofen(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+			} else if (line.startsWith("Schreibtisch")) {
+				moebel.add(new Schreibtisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+			} else if (line.startsWith("Arbeitsplatte")) {
+				moebel.add(new Arbeitsplatte(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
 			} else if (line.startsWith("Stuhl")) {
 				moebel.add(new Stuhl(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
 			} else if (line.startsWith("Tisch")) {
@@ -184,7 +198,7 @@ public class FileParser {
 				reader.mark(1000);
 				String additionalInfo = reader.readLine().trim();
 				line = reader.readLine().trim();
-				
+
 				do {
 					switch (additionalInfo.split(":")[0].trim()) {
 					case "Stühle":
@@ -216,7 +230,7 @@ public class FileParser {
 				} while ((additionalInfo = reader.readLine()) != null && !additionalInfo.endsWith(":")
 						&& additionalInfo != "");
 				reader.reset();
-				
+
 				moebel.add(new Tisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
 						anzahlStuehle, stuehle, stuehleOben, stuehleUnten, stuehleLinks, stuehleRechts));
 			} else if (line.startsWith("Toilette")) {
@@ -232,8 +246,8 @@ public class FileParser {
 
 	private static void parseTueren(BufferedReader reader, String raumName, List<TmpTuere> aktuelleTueren)
 			throws IOException {
-		String line;
-		while ((line = reader.readLine()) != null) {
+		String line = reader.readLine();
+		while (line != null /*&& line != "" && !line.endsWith(":")*/) {
 			line = line.trim();
 			if (line.isEmpty() || line.endsWith(":")) {
 				reader.reset();
@@ -241,6 +255,7 @@ public class FileParser {
 			}
 			aktuelleTueren.add(new TmpTuere(raumName, line, 1)); // TODO Türbreite
 			reader.mark(1000);
+			line = reader.readLine();
 		}
 	}
 

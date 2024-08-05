@@ -31,7 +31,6 @@ Schlafzimmer:
     Bett: 2x2
     Schrank: 3x1
     Schreibtisch: 2x1
-        Stühle: 1
   Türen:
     Wohnzimmer
     Badezimmer
@@ -52,7 +51,7 @@ Kinderzimmer:
   Maße: 4x4
   Möbel:
     Bett: 2x1
-    Schreibtisch: 1x1 inkl. Stuhl
+    Schreibtisch: 1x1
     Kommode: 2x1
   Türen:
     Flur

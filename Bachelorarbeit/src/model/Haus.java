@@ -1,8 +1,10 @@
 package model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import model.raeume.Flur;
 import parser.FileParser;
 
 public class Haus {
@@ -12,6 +14,9 @@ public class Haus {
 	private List<Tuer> tueren;
 
 	public Haus(String path) {
+		raeume = new ArrayList<Raum>();
+		tueren = new ArrayList<Tuer>();
+		flur = new Flur("Flur", 2, 1.5, null, null);
 		try {
 			FileParser.parseHaus(path, this);
 		} catch (IOException e) {
