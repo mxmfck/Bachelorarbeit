@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Raum {
-
-	private double laenge;
-	private double breite;
-	private List<Moebelstueck> moebel;
-	private double groesse;
-	private List<Tuer> tueren;
-	private String name; // Zur Identifikation des Raumes
+//	Abstrakte Klasse für alle Räume
+	
+	private double laenge; //Länge des Raumes
+	private double breite; //Breite des Raumes
+	private List<Moebelstueck> moebel; //Liste der Möbelstücke im Raum
+	private double groesse; //Größe des Raumes
+	private List<Tuer> tueren; //Liste der Türen im Raum
+	private String name; // Name des Raumes zur Identifikation
 
 	public Raum(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
 		this.name = name;
@@ -21,10 +22,11 @@ public abstract class Raum {
 		this.groesse = laenge * breite;
 	}
 
-	public Raum() {
+//	public Raum() {
+//
+//	}
 
-	}
-
+	//Getter für alle Attribute
 	public double getLaenge() {
 		return laenge;
 	}
@@ -45,6 +47,7 @@ public abstract class Raum {
 		return tueren;
 	}
 
+	//Methoden zum Hinzufügen von Möbelstücken und Türen
 	public void addMoebel(Moebelstueck moebel) {
 		this.moebel.add(moebel);
 	}
@@ -55,6 +58,7 @@ public abstract class Raum {
 		this.tueren.add(tuer);
 	}
 
+	
 	public void setLaenge(double laenge) {
 		this.laenge = laenge;
 	}

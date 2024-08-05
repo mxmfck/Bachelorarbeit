@@ -1,10 +1,11 @@
 package model;
 
 public class Tuer {
+//	Klasse für Türen
 
-	private Raum vonRaum;
-	private Raum inRaum;
-	private double breite;
+	private Raum vonRaum; //Raum, von dem die Tür ausgeht
+	private Raum inRaum; //Raum, in den die Tür führt
+	private double breite; //Breite der Tür
 	
 	public Tuer(Raum vonRaum, Raum inRaum, double breite) {
 		this.vonRaum = vonRaum;
@@ -12,6 +13,7 @@ public class Tuer {
 		this.breite = breite;
 	}
 	
+	//Getter für alle Attribute
 	public Raum getVonRaum() {
 		return vonRaum;
 	}

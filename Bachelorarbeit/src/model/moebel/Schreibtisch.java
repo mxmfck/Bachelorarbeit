@@ -3,8 +3,9 @@ package model.moebel;
 import model.Moebelstueck;
 
 public class Schreibtisch extends Moebelstueck{
-
-	private Stuhl schreibtischstuhl;
+//    Klasse für Schreibtische (Sonderfall von Moebelstueck)
+	
+	private Stuhl schreibtischstuhl; //Stuhl zum Schreibtisch
 	
 	public Schreibtisch(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
 			double keepOutUnten) {

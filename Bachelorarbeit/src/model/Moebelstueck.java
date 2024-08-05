@@ -1,13 +1,15 @@
 package model;
 
 public abstract class Moebelstueck {
-
-	private double laenge;
-	private double breite;
-	private double keepOutLinks;
-	private double keepOutRechts;
-	private double keepOutOben;
-	private double keepOutUnten;
+// 	Abstrakte Klasse für alle Möbelstücke
+	
+	
+	private double laenge; //Länge des Möbelstücks
+	private double breite; //Breite des Möbelstücks
+	private double keepOutLinks; //Abstand des Möbelstücks zum nächsten Objekt links
+	private double keepOutRechts; //Abstand des Möbelstücks zum nächsten Objekt rechts
+	private double keepOutOben; //Abstand des Möbelstücks zum nächsten Objekt oben
+	private double keepOutUnten; //Abstand des Möbelstücks zum nächsten Objekt unten
 	
 	public Moebelstueck(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
 			double keepOutUnten) {
@@ -19,6 +21,7 @@ public abstract class Moebelstueck {
 		this.keepOutUnten = keepOutUnten;
 	}
 	
+	//Getter für alle Attribute
 	public double getLaenge() {
 		return laenge;
 	}

@@ -5,13 +5,14 @@ import java.util.List;
 import model.Moebelstueck;
 
 public class Tisch extends Moebelstueck{
-
-	private int anzahlStuehle;
-	private List<Stuhl> stuehle;
-	private boolean stuehleOben;
-	private boolean stuehleUnten;
-	private boolean stuehleLinks;
-	private boolean stuehleRechts;
+//    Klasse für Tische (Sonderfall von Moebelstueck)
+	
+	private int anzahlStuehle; //Anzahl der Stühle
+	private List<Stuhl> stuehle; //Liste der Stühle
+	private boolean stuehleOben; //Platzierung der Stühle
+	private boolean stuehleUnten; //Platzierung der Stühle
+	private boolean stuehleLinks; //Platzierung der Stühle
+	private boolean stuehleRechts; //Platzierung der Stühle
 	
 	public Tisch(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
 			double keepOutUnten, int anzahlStuehle, List<Stuhl> stuehle, boolean stuehleOben, boolean stuehleUnten,
@@ -25,6 +26,7 @@ public class Tisch extends Moebelstueck{
 		this.stuehleRechts = stuehleRechts;
 	}
 	
+	//Getter und Setter
 	public int getAnzahlStuehle() {
 		return anzahlStuehle;
 	}
