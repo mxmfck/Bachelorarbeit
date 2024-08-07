@@ -74,4 +74,14 @@ public abstract class Raum {
 	public String getName() {
 		return name;
 	}
+	
+	public String toString() {
+		String result="Name: " + name + " | Länge: " + laenge + " | Breite: " + breite + " | Größe: " + groesse + " | Möbel: "+ "\n";
+		if (moebel == null)
+            return result;
+		for (Moebelstueck moebelstueck : moebel) {
+			result += moebelstueck.toString() + "\n";
+		}
+		return result;
+	}
 }

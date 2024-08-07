@@ -73,12 +73,12 @@ public class FileParser {
 		List<Moebelstueck> moebel = new ArrayList<>();
 
 		String line;
-		while ((line = reader.readLine()) != null && line !="") { //ReadLine solange bis das Ende der Datei erreicht ist oder eine freie Zeile erreicht wird
+		while ((line = reader.readLine()) != null) { //removed && line !="" //ReadLine solange bis das Ende der Datei erreicht ist oder eine freie Zeile erreicht wird
 			line = line.trim();
-//			if (line.isEmpty()) { // removed || line.endsWith(":")
-////				reader.reset();
-//				break;  					    // removed Works?
-//			}
+			if (line.isEmpty()) { // removed || line.endsWith(":")
+//				reader.reset();
+				break;  					    // removed Works?
+			}
 			switch (line.split(":")[0]) { //Switch-Case für die verschiedenen Anforderungen
 			case "Größe":
 				groesse = Double.parseDouble(line.split(":")[1].trim().replace(',', '.'));
@@ -198,9 +198,9 @@ public class FileParser {
 				boolean stuehleRechts = false;
 				List<Stuhl> stuehle = new ArrayList<>();
 
-				reader.mark(1000);
+//				reader.mark(1000);
 				String additionalInfo = reader.readLine().trim();
-				line = reader.readLine().trim();
+//				line = reader.readLine().trim();
 
 				do {
 					switch (additionalInfo.split(":")[0].trim()) {

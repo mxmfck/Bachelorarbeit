@@ -12,4 +12,8 @@ public class Schreibtisch extends Moebelstueck{
 		super(laenge, breite, keepOutLinks, keepOutRechts, keepOutOben, keepOutUnten);
 		schreibtischstuhl = new Stuhl(0.5,0.5,keepOutLinks, keepOutRechts, keepOutOben, keepOutUnten); //TODO Werte
 	}
+	
+	public String toString() {
+		return " Schreibtisch: " + super.toString()+ "\n  " + schreibtischstuhl.toString();
+	}
 }

@@ -23,6 +23,7 @@ public class Haus {
 		raeume = new ArrayList<Raum>(); //Initialisierung der Liste für die Räume
 		tueren = new ArrayList<Tuer>(); //Initialisierung der Liste für die Türen
 		flur = new Flur("Flur", 2, 1.5, null, null); //Initialisierung des Flurs (vorläufig)
+		raeume.add(flur); //Hinzufügen des Flurs zur Liste der Räume //TODO
 		try {
 			FileParser.parseHaus(path, this);//Aufruf des Parsers, der die Anforderungen aus der Datei einliest | Übergabe des Pfades und des aktuellen Hauses
 		} catch (IOException e) {
@@ -58,5 +59,13 @@ public class Haus {
 			}
 		}
 		throw new IllegalArgumentException("Raum nicht gefunden");
+	}
+	
+	public String toString() { // Methode zur Validirierung des Inputs
+		String result = "";
+		for (Raum raum : raeume) {
+			result += raum.toString() + "\n";
+		}
+		return result;
 	}
 }
