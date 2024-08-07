@@ -253,7 +253,7 @@ public class FileParser {
 		String line = reader.readLine();
 		while (line != null /*&& line != "" && !line.endsWith(":")*/) {
 			line = line.trim();
-			if (line.isEmpty() || line.endsWith(":")) {
+			if (line.isEmpty() || line.contains(":")) { //contains(), da Zeilen mit Türen keine Doppelpunkte enthalten
 				reader.reset();
 				break;
 			}
