@@ -1,5 +1,5 @@
 Wohnzimmer:
-  Maße: 6x5
+  Maße: 5x4
   Möbel:
     Sofa: 3x1,5
         Keepout: 1,5
@@ -8,9 +8,7 @@ Wohnzimmer:
         Stühle: 4
         Position: l,o,r,u
   Türen:
-    Küche
-    Schlafzimmer
-  Größe: 30
+    Flur
 
 Küche:
   Möbel:
@@ -21,34 +19,33 @@ Küche:
     Spüle: 1x1
   Türen:
     Wohnzimmer
-  Größe: 15
-  Maße: 3x5
+    Flur
+  Maße: 4x3,5
 
 Schlafzimmer:
   Türen:
-    Wohnzimmer
     Badezimmer
-  Größe: 20
-  Maße: 4x5
+    Flur
+  Maße: 5x4
   Möbel:
     Bett: 2x2
     Schrank: 3x1
     Schreibtisch: 2x1
 
+
 Badezimmer:
-  Größe: 12
-  Maße: 3x4
+  Maße: 2,5x2
   Türen:
-    Schlafzimmer
+    Flur
   Möbel:
     Dusche: 1x1
     Waschbecken: 1x1
     Toilette: 1x1
     Badewanne: 2x1
+ 
 
 Kinderzimmer:
-  Größe: 16
-  Maße: 4x4
+  Maße: 3,5x3
   Möbel:
     Bett: 2x1
     Schreibtisch: 1x1

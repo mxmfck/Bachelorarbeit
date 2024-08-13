@@ -6,6 +6,8 @@ public class Tuer {
 	private Raum vonRaum; //Raum, von dem die Tür ausgeht
 	private Raum inRaum; //Raum, in den die Tür führt
 	private double breite; //Breite der Tür
+	private double x; //x-Koordinate der Tür
+	private double y; //y-Koordinate der Tür
 	
 	public Tuer(Raum vonRaum, Raum inRaum, double breite) {
 		this.vonRaum = vonRaum;
@@ -26,5 +28,23 @@ public class Tuer {
 		return breite;
 	}
 	
+	public double getX() {
+		return x;
+	}
+	
+	public double getY() {
+		return y;
+	}
+	
+	//Setter für die x-Koordinate
+	public void setX(double x) {
+		this.x = x;
+	}
+	
+	//Setter für die y-Koordinate
+	
+	public void setY(double y) {
+		this.y = y;
+	}
 	
 }

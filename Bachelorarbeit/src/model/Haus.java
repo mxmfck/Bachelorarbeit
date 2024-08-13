@@ -30,6 +30,8 @@ public class Haus {
 			// TODO Auto-generated catch block | Fehlerbehandlung
 			e.printStackTrace();
 		}
+		
+		Grundriss grundriss = new Grundriss(this); //Erstellung eines Grundrisses auf Basis des Hauses
 	}
 
 	public List<Raum> getRaeume() { //Getter für die Liste der Räume
