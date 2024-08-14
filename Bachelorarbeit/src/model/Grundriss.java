@@ -7,7 +7,7 @@ public class Grundriss {
     // Klasse, die einen kompletten Grundriss speichert
 
     private List<RaumModell> raeume;
-    private List<Raum> tmpRaeume;
+//    private List<Raum> tmpRaeume;
 
     private double xLinks = 0; // x-Koordinate an dem der Raum auf den Flur trifft
     private double yLinks = 0; // Aktuelle y-Koordinate der Breite der Räume links des Flurs
@@ -28,6 +28,7 @@ public class Grundriss {
     }
 
     public void berechnePositionen(Haus haus) {
+    	List<Raum> tmpRaeume;
         tmpRaeume = new ArrayList<>(haus.getRaeume());
         raeume = new ArrayList<>();
         findeUndEntferneFlur(tmpRaeume);
@@ -43,11 +44,11 @@ public class Grundriss {
         tmpRaeume.remove(random);
 
         linksPlaziert = true;
-        platziereRaum(ersterRaum);
+        platziereRaum(ersterRaum, tmpRaeume);
 
         while (!tmpRaeume.isEmpty()) {
             Raum raum = tmpRaeume.remove((int) (Math.random() * tmpRaeume.size()));
-            platziereRaum(raum);
+            platziereRaum(raum,tmpRaeume);
         }
 
         verlaengereFlur();
@@ -65,7 +66,7 @@ public class Grundriss {
         }
     }
 
-    public void platziereRaum(Raum raum) {
+    public void platziereRaum(Raum raum, List<Raum> tmpRaeume) {
         if (yLinks <= yRechts) {
             raeume.add(new RaumModell(raum.getName(), raum.getLaenge(), raum.getBreite(), raum.getMoebel(),
                     raum.getTueren(), xLinks - raum.getLaenge(), yLinks));
@@ -77,27 +78,27 @@ public class Grundriss {
             yRechts += raum.getBreite();
             linksPlaziert = false;
         }
-        checkTueren(raum);
+        checkTueren(raum, tmpRaeume);
     }
 
-    public void checkTueren(Raum letzterRaum) {
+    public void checkTueren(Raum letzterRaum, List<Raum> tmpRaeume) {
         for (Tuer tuer : letzterRaum.getTueren()) {
             if (tuer.getInRaum().getName().equals(letzterRaum.getName()) && !tuer.getVonRaum().getName().equals("Flur")) {
-                Raum raum = findeRaumByName(tuer.getVonRaum().getName());
+                Raum raum = findeRaumByName(tuer.getVonRaum().getName(),tmpRaeume);
                 if (raum != null) {
-                    platziereAngrenzendenRaum(raum);
+                    platziereAngrenzendenRaum(raum, tmpRaeume);
                 }
             } else if (tuer.getVonRaum().getName().equals(letzterRaum.getName()) && !tuer.getInRaum().getName().equals("Flur")) {
-                Raum raum = findeRaumByName(tuer.getInRaum().getName());
+                Raum raum = findeRaumByName(tuer.getInRaum().getName(), tmpRaeume);
                 if (raum != null) {
-                    platziereAngrenzendenRaum(raum);
+                    platziereAngrenzendenRaum(raum, tmpRaeume);
                 }
             }
         }
     }
 
     // Methode zum Platzieren eines angrenzenden Raums auf der gleichen Seite wie der vorherige Raum
-    public void platziereAngrenzendenRaum(Raum raum) {
+    public void platziereAngrenzendenRaum(Raum raum, List<Raum> tmpRaeume) {
         if (linksPlaziert) {
             raeume.add(new RaumModell(raum.getName(), raum.getLaenge(), raum.getBreite(), raum.getMoebel(),
                     raum.getTueren(), xLinks - raum.getLaenge(), yLinks));
@@ -107,11 +108,11 @@ public class Grundriss {
                     raum.getTueren(), xRechts, yRechts));
             yRechts += raum.getBreite();
         }
-        checkTueren(raum);
+        checkTueren(raum, tmpRaeume);
     }
 
     // Methode zum Finden eines Raumes anhand des Namens in tmpRaeume
-    private Raum findeRaumByName(String name) {
+    private Raum findeRaumByName(String name, List<Raum> tmpRaeume) {
         for (Raum raum : tmpRaeume) {
             if (raum.getName().equals(name)) {
                 return tmpRaeume.remove(tmpRaeume.indexOf(raum));

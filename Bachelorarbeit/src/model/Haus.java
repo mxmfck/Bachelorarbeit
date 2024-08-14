@@ -13,48 +13,52 @@ import parser.FileParser;
 
 public class Haus {
 
-	
-	private List<Raum> raeume; //Speichert alle Räume des Hauses
-	private Raum flur; //Speichert den Flur des Hauses (wird zu einem späterem Zeitpunkt variabel generiert)
+	private List<Raum> raeume; // Speichert alle Räume des Hauses
+	private Raum flur; // Speichert den Flur des Hauses (wird zu einem späterem Zeitpunkt variabel
+						// generiert)
 	private List<Tuer> tueren;
 
 //	Übergabe des Pfades der Datei, die die Anforderungen enthält 
 	public Haus(String path) {
-		raeume = new ArrayList<Raum>(); //Initialisierung der Liste für die Räume
-		tueren = new ArrayList<Tuer>(); //Initialisierung der Liste für die Türen
-		flur = new Flur("Flur", 2, 1.5, null, null); //Initialisierung des Flurs (vorläufig)
-		raeume.add(flur); //Hinzufügen des Flurs zur Liste der Räume //TODO
+		raeume = new ArrayList<Raum>(); // Initialisierung der Liste für die Räume
+		tueren = new ArrayList<Tuer>(); // Initialisierung der Liste für die Türen
+		flur = new Flur("Flur", 2, 1.5, null, null); // Initialisierung des Flurs (vorläufig)
+		raeume.add(flur); // Hinzufügen des Flurs zur Liste der Räume //TODO
 		try {
-			FileParser.parseHaus(path, this);//Aufruf des Parsers, der die Anforderungen aus der Datei einliest | Übergabe des Pfades und des aktuellen Hauses
+			FileParser.parseHaus(path, this);// Aufruf des Parsers, der die Anforderungen aus der Datei einliest |
+												// Übergabe des Pfades und des aktuellen Hauses
 		} catch (IOException e) {
 			// TODO Auto-generated catch block | Fehlerbehandlung
 			e.printStackTrace();
 		}
-		
-		Grundriss grundriss = new Grundriss(this); //Erstellung eines Grundrisses auf Basis des Hauses
+
+		Grundriss grundriss = new Grundriss(this); // Erstellung eines Grundrisses auf Basis des Hauses
+		SpiralBasedGrundriss spiralBasedGrundriss = new SpiralBasedGrundriss(this); // Erstellung eines Grundrisses auf
+																					// Basis des Hauses
 	}
 
-	public List<Raum> getRaeume() { //Getter für die Liste der Räume
+	public List<Raum> getRaeume() { // Getter für die Liste der Räume
 		return raeume;
 	}
 
-	public void addRaum(Raum raum) { //Methode zum Hinzufügen eines Raumes
+	public void addRaum(Raum raum) { // Methode zum Hinzufügen eines Raumes
 		raeume.add(raum);
 	}
 
-	public List<Tuer> getTueren() { //Getter für die Liste der Türen
+	public List<Tuer> getTueren() { // Getter für die Liste der Türen
 		return tueren;
 	}
 
-	public void addTuer(Tuer tuer) { //Methode zum Hinzufügen einer Türe
+	public void addTuer(Tuer tuer) { // Methode zum Hinzufügen einer Türe
 		tueren.add(tuer);
 	}
 
-	public Raum getFlur() { //Getter für den Flur
+	public Raum getFlur() { // Getter für den Flur
 		return flur;
 	}
 
-	public Raum getRaumByName(String name) { //Methode zum Suchen eines Raumes anhand des Namens | Nötig für die Zuteilung der Türen
+	public Raum getRaumByName(String name) { // Methode zum Suchen eines Raumes anhand des Namens | Nötig für die
+												// Zuteilung der Türen
 		for (Raum raum : raeume) {
 			if (raum.getName().equals(name)) {
 				return raum;
@@ -62,7 +66,7 @@ public class Haus {
 		}
 		throw new IllegalArgumentException("Raum nicht gefunden");
 	}
-	
+
 	public String toString() { // Methode zur Validirierung des Inputs
 		String result = "";
 		for (Raum raum : raeume) {
