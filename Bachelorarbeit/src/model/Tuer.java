@@ -8,6 +8,8 @@ public class Tuer {
 	private double breite; //Breite der Tür
 	private double x; //x-Koordinate der Tür
 	private double y; //y-Koordinate der Tür
+	private boolean linksOeffnend; //Gibt an, ob die Tür links öffnend ist
+	private boolean horizontal;
 	
 	public Tuer(Raum vonRaum, Raum inRaum, double breite) {
 		this.vonRaum = vonRaum;
@@ -36,6 +38,14 @@ public class Tuer {
 		return y;
 	}
 	
+	public boolean isHorizontal() {
+		return horizontal;
+	}
+	
+	public boolean isLinksOeffnend() {
+		return linksOeffnend;
+	}
+	
 	//Setter für die x-Koordinate
 	public void setX(double x) {
 		this.x = x;
@@ -47,4 +57,13 @@ public class Tuer {
 		this.y = y;
 	}
 	
+	//Setter für die Öffnungsrichtung
+	public void setLinksOeffnend(boolean linksOeffnend) {
+		this.linksOeffnend = linksOeffnend;
+	}
+	
+	//Setter für die Ausrichtung
+	public void setHorizontal(boolean horizontal) {
+		this.horizontal = horizontal;
+	}
 }

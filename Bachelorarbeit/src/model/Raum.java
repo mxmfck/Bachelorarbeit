@@ -12,6 +12,8 @@ public abstract class Raum {
 	private double groesse; //Größe des Raumes
 	private List<Tuer> tueren; //Liste der Türen im Raum
 	private String name; // Name des Raumes zur Identifikation
+//	private double x;
+//	private double y;
 
 	public Raum(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
 		this.name = name;
@@ -22,9 +24,7 @@ public abstract class Raum {
 		this.groesse = laenge * breite;
 	}
 
-//	public Raum() {
-//
-//	}
+
 
 	//Getter für alle Attribute
 	public double getLaenge() {
@@ -46,6 +46,14 @@ public abstract class Raum {
 	public List<Tuer> getTueren() {
 		return tueren;
 	}
+	
+//	public double getX() {
+//		return x;
+//	}
+//	
+//	public double getY() {
+//		return y;
+//	}
 
 	//Methoden zum Hinzufügen von Möbelstücken und Türen
 	public void addMoebel(Moebelstueck moebel) {
@@ -70,6 +78,14 @@ public abstract class Raum {
 	public void setGroesse(double groesse) {
 		this.groesse = groesse;
 	}
+	
+//	public void setX(double x) {
+//		this.x = x;
+//	}
+//	
+//	public void setY(double y) {
+//		this.y = y;
+//	}
 
 	public String getName() {
 		return name;

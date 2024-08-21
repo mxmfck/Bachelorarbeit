@@ -45,7 +45,7 @@ Badezimmer:
  
 
 Kinderzimmer:
-  Maße: 1,5x1,5
+  Maße: 2x1
   Möbel:
     Bett: 2x1
     Schreibtisch: 1x1

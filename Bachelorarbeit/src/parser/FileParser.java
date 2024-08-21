@@ -257,7 +257,7 @@ public class FileParser {
 				reader.reset();
 				break;
 			}
-			aktuelleTueren.add(new TmpTuere(raumName, line, 1)); // TODO Türbreite
+			aktuelleTueren.add(new TmpTuere(raumName, line, 0.92)); // Türbreite mit Rahmen
 			reader.mark(1000);
 			line = reader.readLine();
 		}
@@ -283,7 +283,7 @@ public class FileParser {
 		private String inRaum;
 		private double breite;
 
-		public TmpTuere(String vonRaum, String inRaum, double breite) {
+		public TmpTuere(String inRaum, String vonRaum, double breite) {
 			this.vonRaum = vonRaum;
 			this.inRaum = inRaum;
 			this.breite = breite;
