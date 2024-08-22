@@ -7,10 +7,11 @@ public class Fenster {
 	private double breite;
 	private boolean horizontal;
 	
-	public Fenster(double x, double y, double breite) {
+	public Fenster(double x, double y, double breite, boolean horizontal) {
 		this.x = x;
 		this.y = y;
 		this.breite = breite;
+		this.horizontal = horizontal;
 	}
 	
 	public double getX() {

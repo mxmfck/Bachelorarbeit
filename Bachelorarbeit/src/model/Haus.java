@@ -33,7 +33,7 @@ public class Haus {
 		}
 
 		Grundriss grundriss = new Grundriss(this); // Erstellung eines Grundrisses auf Basis des Hauses
-		SpiralBasedGrundriss spiralBasedGrundriss = new SpiralBasedGrundriss(this); // Erstellung eines Grundrisses auf
+//		SpiralBasedGrundriss spiralBasedGrundriss = new SpiralBasedGrundriss(this); // Erstellung eines Grundrisses auf
 																					// Basis des Hauses
 	}
 

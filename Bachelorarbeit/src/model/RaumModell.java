@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RaumModell{
@@ -12,6 +13,7 @@ public class RaumModell{
 	private double y;
 	private List<Moebelstueck> moebel;
 	private List<Tuer> tueren;
+	private List<Fenster> fenster;
 
 	public RaumModell(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren, double x,
 			double y) {
@@ -22,6 +24,7 @@ public class RaumModell{
 		this.tueren = tueren;
 		this.x = x;
 		this.y = y;
+		fenster = new ArrayList<Fenster>();
 	}
 
 	public void setX(double x) {
@@ -63,12 +66,12 @@ public class RaumModell{
 	public List<Tuer> getTueren() {
 		return tueren;
 	}
+	
+	public List<Fenster> getFenster() {
+		return fenster;
+	}
 
-//	public void addTuere(Tuer tuer) {
-//		if (tueren == null) {
-//			tueren = new ArrayList<Tuer>();
-//		}
-//		tueren.add(tuer);
-//	}
-
+	public void addFenster(Fenster fenster) {
+		this.fenster.add(fenster);
+	}
 }

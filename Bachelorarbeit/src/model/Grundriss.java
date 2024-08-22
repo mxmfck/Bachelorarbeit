@@ -21,7 +21,7 @@ public class Grundriss {
 
 	public Grundriss(Haus haus) {
 		berechnePositionen(haus);
-		erzeugeTueren();
+
 	}
 
 	public List<RaumModell> getRaeume() {
@@ -58,7 +58,7 @@ public class Grundriss {
 		} while (ersterRaum.getTueren().size() > 2);
 		tmpRaeume.remove(random);
 
-		linksPlaziert = false;
+//		linksPlaziert = false;
 		platziereRaumRechts(ersterRaum, tmpRaeume);
 
 		while (!tmpRaeume.isEmpty()) {
@@ -90,9 +90,9 @@ public class Grundriss {
 	}
 
 	public void platziereRaum(Raum raum, List<Raum> tmpRaeume) {
-		if (yLinks == 0) {
-
-		}
+//		if (yLinks == 0) {
+//
+//		}
 		if (yLinks <= yRechts) {
 //            raeume.add(new RaumModell(raum.getName(), raum.getLaenge(), raum.getBreite(), raum.getMoebel(),
 //                    raum.getTueren(), xLinks - raum.getLaenge(), yLinks));
@@ -136,7 +136,7 @@ public class Grundriss {
 				}
 			} else {
 				raeumeLinks.add(new RaumModell(raum.getName(), raum.getBreite(), raum.getLaenge(), raum.getMoebel(),
-						raum.getTueren(), xLinks - raum.getLaenge(), yLinks));
+						raum.getTueren(), xLinks - raum.getBreite(), yLinks));
 				yLinks += raum.getLaenge();
 				if (maxLinks < raum.getBreite()) {
 					maxLinks = raum.getBreite();
@@ -183,10 +183,11 @@ public class Grundriss {
 				}
 			}
 
-			linksPlaziert = false;
-			checkTueren(raum, tmpRaeume);
+			
 
 		}
+		linksPlaziert = false;
+		checkTueren(raum, tmpRaeume);
 	}
 
 	public void checkTueren(Raum letzterRaum, List<Raum> tmpRaeume) {
@@ -247,12 +248,14 @@ public class Grundriss {
 
 		for (RaumModell raum : raeumeLinks) {
 			for (Tuer tuer : raum.getTueren()) {
-				String raumName = tuer.getVonRaum().getName();
+				String vonRaumName = tuer.getVonRaum().getName();
+				if(raum.getName().equals("Wohnzimmer"))
+					System.out.println("Wohnzimmer");
 				// Platzierung der Türen zum FLur
-				if (raumName == "Flur") {
+				if (vonRaumName == "Flur") {
 					double random = Math.random();
 
-					if (raum.getBreite() > 1.02) {
+					if (raum.getBreite() > 1.12) {
 						if (random < 0.5) {
 							tuer.setX(raum.getX() + raum.getLaenge());
 							tuer.setY(raum.getY() + 0.1);
@@ -260,7 +263,7 @@ public class Grundriss {
 							tuer.setLinksOeffnend(false);
 						} else {
 							tuer.setX(raum.getX() + raum.getLaenge());
-							tuer.setY(raum.getY() + raum.getLaenge() - 0.1);
+							tuer.setY(raum.getY() + raum.getBreite() - (0.1+tuer.getBreite()));
 							tuer.setHorizontal(false);
 							tuer.setLinksOeffnend(true);
 						}
@@ -275,6 +278,7 @@ public class Grundriss {
 					if (tuer.getInRaum().getName() == raum.getName()) {
 						RaumModell inRaum = raum;
 						RaumModell vonRaum = findeRaumByNameModell(tuer.getVonRaum().getName(), raeumeLinks);
+						Tuer vonRaumTuer = findeTuerByName(tuer.getInRaum().getName(), vonRaum.getTueren());
 						if (inRaum.getY() + inRaum.getBreite() == vonRaum.getY()) {// inRaum unter vonRaum
 							switch (Double.compare((inRaum.getLaenge() - vonRaum.getLaenge()), 0.0)) { // Vergleich der
 																										// Längen der
@@ -291,6 +295,11 @@ public class Grundriss {
 								tuer.setY(vonRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(true);
+
+								vonRaumTuer.setX(inRaum.getX() + 0.1);
+								vonRaumTuer.setY(vonRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(true);
 								break;
 
 							case 1:
@@ -298,6 +307,11 @@ public class Grundriss {
 								tuer.setY(vonRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(true);
+
+								vonRaumTuer.setX(vonRaum.getX() + 0.1);
+								vonRaumTuer.setY(vonRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(true);
 								break;
 
 							case -1:
@@ -305,6 +319,11 @@ public class Grundriss {
 								tuer.setY(vonRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(true);
+
+								vonRaumTuer.setX(inRaum.getX() + 0.1);
+								vonRaumTuer.setY(vonRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(true);
 								break;
 
 							}
@@ -324,6 +343,11 @@ public class Grundriss {
 								tuer.setY(inRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(false);
+
+								vonRaumTuer.setX(inRaum.getX() + 0.1);
+								vonRaumTuer.setY(inRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(false);
 								break;
 
 							case 1:
@@ -331,6 +355,11 @@ public class Grundriss {
 								tuer.setY(inRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(false);
+
+								vonRaumTuer.setX(vonRaum.getX() + 0.1);
+								vonRaumTuer.setY(inRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(false);
 								break;
 
 							case -1:
@@ -338,6 +367,11 @@ public class Grundriss {
 								tuer.setY(inRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(false);
+
+								vonRaumTuer.setX(inRaum.getX() + 0.1);
+								vonRaumTuer.setY(inRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(false);
 								break;
 							}
 						}
@@ -352,7 +386,7 @@ public class Grundriss {
 				if (raumName == "Flur") {
 					double random = Math.random();
 
-					if (raum.getBreite() > 1.02) {
+					if (raum.getBreite() > 1.12) {
 						if (random < 0.5) {
 							tuer.setX(raum.getX());
 							tuer.setY(raum.getY() + 0.1);
@@ -360,7 +394,7 @@ public class Grundriss {
 							tuer.setLinksOeffnend(true);
 						} else {
 							tuer.setX(raum.getX());
-							tuer.setY(raum.getY() + raum.getLaenge() - 0.1);
+							tuer.setY(raum.getY() + raum.getBreite() - (0.1+tuer.getBreite()));
 							tuer.setHorizontal(false);
 							tuer.setLinksOeffnend(false);
 						}
@@ -374,7 +408,8 @@ public class Grundriss {
 				} else {
 					if (tuer.getInRaum().getName() == raum.getName()) {
 						RaumModell inRaum = raum;
-						RaumModell vonRaum = findeRaumByNameModell(tuer.getVonRaum().getName(), raeumeLinks);
+						RaumModell vonRaum = findeRaumByNameModell(tuer.getVonRaum().getName(), raeumeRechts);
+						Tuer vonRaumTuer = findeTuerByName(tuer.getInRaum().getName(), vonRaum.getTueren());
 						if (inRaum.getY() + inRaum.getBreite() == vonRaum.getY()) {// inRaum unter vonRaum
 							switch (Double.compare((inRaum.getLaenge() - vonRaum.getLaenge()), 0.0)) { // Vergleich der
 																										// Längen der
@@ -387,24 +422,39 @@ public class Grundriss {
 																										// lang
 
 							case 0:
-								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1+tuer.getBreite()));
+								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
 								tuer.setY(vonRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(false);
+
+								vonRaumTuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+								vonRaumTuer.setY(vonRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(false);
 								break;
 
 							case 1:
-								tuer.setX(vonRaum.getX() + inRaum.getLaenge() - (0.1+tuer.getBreite()));
+								tuer.setX(vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
 								tuer.setY(vonRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(false);
+
+								vonRaumTuer.setX(vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+								vonRaumTuer.setY(vonRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(false);
 								break;
 
 							case -1:
-								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1+tuer.getBreite()));
+								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
 								tuer.setY(vonRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(false);
+
+								vonRaumTuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+								vonRaumTuer.setY(vonRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(false);
 								break;
 
 							}
@@ -420,24 +470,39 @@ public class Grundriss {
 							// lang
 
 							case 0:
-								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1+tuer.getBreite()));
+								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
 								tuer.setY(inRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(true);
+
+								vonRaumTuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+								vonRaumTuer.setY(inRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(true);
 								break;
 
 							case 1:
-								tuer.setX(vonRaum.getX() + inRaum.getLaenge() - (0.1+tuer.getBreite()));
+								tuer.setX(vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
 								tuer.setY(inRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(true);
+
+								vonRaumTuer.setX(vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+								vonRaumTuer.setY(inRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(true);
 								break;
 
 							case -1:
-								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1+tuer.getBreite()));
+								tuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
 								tuer.setY(inRaum.getY());
 								tuer.setHorizontal(true);
 								tuer.setLinksOeffnend(true);
+
+								vonRaumTuer.setX(inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+								vonRaumTuer.setY(inRaum.getY());
+								vonRaumTuer.setHorizontal(true);
+								vonRaumTuer.setLinksOeffnend(true);
 								break;
 							}
 						}
@@ -445,13 +510,18 @@ public class Grundriss {
 				}
 			}
 		}
-		
+
 		RaumModell flur = raeume.get(0);
-		Tuer tuer = raeume.get(0).getTueren().get(0);
-		tuer.setX((flur.getBreite()-tuer.getBreite())/2);
-		tuer.setY(flur.getY());
-		tuer.setHorizontal(true);
-		tuer.setLinksOeffnend(true);
+		Tuer flurTuer= null;
+		for (Tuer t : flur.getTueren()) {
+			if (t.getInRaum().getName().equals("Flur")) {
+				flurTuer = t;
+			}
+		}
+		flurTuer.setX((flur.getBreite() - flurTuer.getBreite()) / 2);
+		flurTuer.setY(flur.getY());
+		flurTuer.setHorizontal(true);
+		flurTuer.setLinksOeffnend(true);
 
 	}
 
@@ -463,10 +533,175 @@ public class Grundriss {
 		}
 		return null;
 	}
-	
-	private void erzeugeFenster() {
-		for (RaumModell raum :raeumeLinks){
-			
+
+	private void erzeugeFenster() { // TODO Größe der Räume anpassen //80cm klein // 110cm mittel // 150cm groß
+		for (RaumModell raum : raeumeLinks) {
+			if (raeumeLinks.indexOf(raum) == 0) {
+				if (!raum.getName().contains("Badezimmer") && !raum.getName().contains("WC")) {
+					if (raum.getLaenge() <= 2) {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2, raum.getY(), 0.8, true));
+					} else if (raum.getLaenge() <= 4) {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 1.1) / 2, raum.getY(), 1.1, true));
+					} else {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 1.5) / 2, raum.getY(), 1.5, true));
+					}
+
+					if (raum.getBreite() <= 2) {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					} else if (raum.getBreite() <= 4) {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 1.1) / 2, 1.1, false));
+					} else {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 1.5) / 2, 1.5, false));
+					}
+				} else {
+					if (raum.getLaenge() < raum.getBreite()) {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2, raum.getY(), 0.8, true));
+					} else {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					}
+				}
+			} else if (raeumeLinks.indexOf(raum) < raeumeLinks.size() - 1) {
+				if (raum.getBreite() <= 2) {
+					raum.addFenster(new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+				} else if (raum.getBreite() <= 4) {
+					raum.addFenster(new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 1.1) / 2, 1.1, false));
+				} else {
+					raum.addFenster(new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 1.5) / 2, 1.5, false));
+				}
+			} else if (raeumeLinks.indexOf(raum) == raeumeLinks.size() - 1) {
+				if (!raum.getName().contains("Badezimmer") && !raum.getName().contains("WC")) {
+					if (raum.getLaenge() <= 2) {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2,
+								raum.getY() + raum.getBreite(), 0.8, true));
+					} else if (raum.getLaenge() <= 4) {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 1.1) / 2,
+								raum.getY() + raum.getBreite(), 1.1, true));
+					} else {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 1.5) / 2,
+								raum.getY() + raum.getBreite(), 1.5, true));
+					}
+
+					if (raum.getBreite() <= 2) {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					} else if (raum.getBreite() <= 4) {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 1.1) / 2, 1.1, false));
+					} else {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 1.5) / 2, 1.5, false));
+					}
+				} else {
+					if (raum.getLaenge() < raum.getBreite()) {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2,
+								raum.getY() + raum.getBreite(), 0.8, true));
+					} else {
+						raum.addFenster(
+								new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					}
+				}
+			}
 		}
+
+		for (RaumModell raum : raeumeRechts) {
+			if (raeumeRechts.indexOf(raum) == 0) {
+				if (!raum.getName().contains("Badezimmer") && !raum.getName().contains("WC")) {
+					if (raum.getLaenge() <= 2) {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2, raum.getY(), 0.8, true));
+					} else if (raum.getLaenge() <= 4) {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 1.1) / 2, raum.getY(), 1.1, true));
+					} else {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 1.5) / 2, raum.getY(), 1.5, true));
+					}
+
+					if (raum.getBreite() <= 2) {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					} else if (raum.getBreite() <= 4) {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 1.1) / 2, 1.1, false));
+					} else {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 1.5) / 2, 1.5, false));
+					}
+				} else {
+					if (raum.getLaenge() < raum.getBreite()) {
+						raum.addFenster(
+								new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2, raum.getY(), 0.8, true));
+					} else {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					}
+				}
+			} else if (raeumeRechts.indexOf(raum) < raeumeRechts.size() - 1) {
+				if (raum.getBreite() <= 2) {
+					raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+							raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+				} else if (raum.getBreite() <= 4) {
+					raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+							raum.getY() + (raum.getBreite() - 1.1) / 2, 1.1, false));
+				} else {
+					raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+							raum.getY() + (raum.getBreite() - 1.5) / 2, 1.5, false));
+				}
+			} else if (raeumeRechts.indexOf(raum) == raeumeRechts.size() - 1) {
+				if (!raum.getName().contains("Badezimmer") && !raum.getName().contains("WC")) {
+					if (raum.getLaenge() <= 2) {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2,
+								raum.getY() + raum.getBreite(), 0.8, true));
+					} else if (raum.getLaenge() <= 4) {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 1.1) / 2,
+								raum.getY() + raum.getBreite(), 1.1, true));
+					} else {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 1.5) / 2,
+								raum.getY() + raum.getBreite(), 1.5, true));
+					}
+
+					if (raum.getBreite() <= 2) {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					} else if (raum.getBreite() <= 4) {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 1.1) / 2, 1.1, false));
+					} else {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 1.5) / 2, 1.5, false));
+					}
+				} else {
+					if (raum.getLaenge() < raum.getBreite()) {
+						raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2,
+								raum.getY() + raum.getBreite(), 0.8, true));
+					} else {
+						raum.addFenster(new Fenster(raum.getX() + raum.getLaenge(),
+								raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+					}
+				}
+			}
+		}
+
+		RaumModell flur = raeume.get(0);
+		flur.addFenster(
+				new Fenster(flur.getX() + (flur.getLaenge() - 0.8) / 2, flur.getY() + flur.getBreite(), 0.8, true));
+
+	}
+
+	public Tuer findeTuerByName(String name, List<Tuer> tueren) {
+		for (Tuer tuer : tueren) {
+			if (tuer.getInRaum().getName().equals(name)) {
+				return tuer;
+			}
+		}
+		return null;
 	}
 }
