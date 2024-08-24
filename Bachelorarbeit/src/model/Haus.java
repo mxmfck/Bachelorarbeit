@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import algorithm.Grundriss;
+import algorithm.GrundrissEvaluator;
 import model.raeume.Flur;
 import parser.FileParser;
 
@@ -32,7 +34,7 @@ public class Haus {
 			e.printStackTrace();
 		}
 
-		Grundriss grundriss = new Grundriss(this); // Erstellung eines Grundrisses auf Basis des Hauses
+		Grundriss grundriss = GrundrissEvaluator.findeBestenGrundriss(this); // Erstellung eines Grundrisses auf Basis des Hauses
 //		SpiralBasedGrundriss spiralBasedGrundriss = new SpiralBasedGrundriss(this); // Erstellung eines Grundrisses auf
 																					// Basis des Hauses
 	}

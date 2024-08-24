@@ -1,7 +1,11 @@
-package model;
+package algorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Haus;
+import model.Raum;
+import model.RaumModell;
 
 public class SpiralBasedGrundriss {
 
