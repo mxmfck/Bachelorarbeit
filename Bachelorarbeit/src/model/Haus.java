@@ -6,6 +6,7 @@ import java.util.List;
 
 import algorithm.Grundriss;
 import algorithm.GrundrissEvaluator;
+import algorithm.MoebelPlatzierer;
 import model.raeume.Flur;
 import parser.FileParser;
 
@@ -34,9 +35,18 @@ public class Haus {
 			e.printStackTrace();
 		}
 
-		Grundriss grundriss = GrundrissEvaluator.findeBestenGrundriss(this); // Erstellung eines Grundrisses auf Basis des Hauses
+		Grundriss grundriss = GrundrissEvaluator.findeBestenGrundriss(this); // Erstellung eines Grundrisses auf Basis
+																				// des Hauses
 //		SpiralBasedGrundriss spiralBasedGrundriss = new SpiralBasedGrundriss(this); // Erstellung eines Grundrisses auf
-																					// Basis des Hauses
+		// Basis des Hauses
+		for (RaumModell raum : grundriss.getRaeume()) { // Iteration
+														// über die
+														// Räume des
+														// Grundrisses
+
+			if (grundriss.getRaeume().indexOf(raum) != 0)
+				MoebelPlatzierer.platziereMoebel(raum);
+		} // Platzierung der Möbel im Raum
 	}
 
 	public List<Raum> getRaeume() { // Getter für die Liste der Räume

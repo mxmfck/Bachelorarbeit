@@ -9,6 +9,10 @@ public abstract class Moebelstueck {
 	private double keepOutRechts; // Abstand des Möbelstücks zum nächsten Objekt rechts
 	private double keepOutOben; // Abstand des Möbelstücks zum nächsten Objekt oben
 	private double keepOutUnten; // Abstand des Möbelstücks zum nächsten Objekt unten
+	protected boolean platzierbarVorFenster = true; // Möbelstück kann vor einem Fenster platziert werden
+	private double x;
+	private double y;
+	
 
 	public Moebelstueck(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
 			double keepOutUnten) {
@@ -19,6 +23,7 @@ public abstract class Moebelstueck {
 		this.keepOutOben = keepOutOben;
 		this.keepOutUnten = keepOutUnten;
 	}
+	
 
 	// Getter für alle Attribute
 	public double getLaenge() {
@@ -43,6 +48,39 @@ public abstract class Moebelstueck {
 
 	public double getKeepOutUnten() {
 		return keepOutUnten;
+	}
+	
+	public double getX() {
+		return x;
+	}
+	
+	public double getY() {
+		return y;
+	}
+	
+	public boolean isPlatzierbarVorFenster() {
+		return platzierbarVorFenster;
+	}
+	
+	// Setter für die Position des Möbelstücks
+	public void setX(double x) {
+		this.x = x;
+	}
+	
+	public void setY(double y) {
+		this.y = y;
+	}
+	
+	public void drehen() {
+		double tmp = laenge;
+		breite = laenge;
+		laenge =tmp;
+		
+		double tmp2 = keepOutLinks;
+		keepOutLinks = keepOutOben;
+		keepOutOben = keepOutRechts;
+		keepOutRechts = keepOutUnten;
+		keepOutUnten = tmp2;
 	}
 
 	public String toString() {

@@ -1,54 +1,75 @@
 Wohnzimmer:
-  Maße: 5x8
+  Maße: 5x6
   Möbel:
-    Sofa: 3x1,5
+    Sofa: 2x1,5
         Keepout: 1,5
-    Schrank: 4x1
-    Tisch: 2x1
-        Stühle: 4
-        Position: l,o,r,u
+    Schrank: 3x0.5
+        Keepout: 0;0;0;1
+    Kommode: 1x0.5
+        Keepout: 0;0;0;1
   Türen:
     Flur
 
 Küche:
   Möbel:
     Kühlschrank: 1x1
+    	Keepout: 0;0;0;1
     Ofen: 1x1
-    Herd: 2x1
+        Keepout: 0;0;0;1
+    Herd: 1x1
+        Keepout: 0;0;0;1
     Arbeitsplatte: 3x1
+    	Keepout: 0;0;0;1
     Spüle: 1x1
+        Keepout: 0;0;0;1
   Türen:
     Wohnzimmer
     Flur
-  Maße: 6x4
+  Maße: 3x5
 
-Schlafzimmer:
+Schlafzimmer 1:
   Türen:
-    Badezimmer
     Flur
-  Maße: 3x4
+  Maße: 5x6
   Möbel:
     Bett: 2x2
+        Keepout: 1;1;0;1
     Schrank: 3x1
-    Schreibtisch: 2x1
+        Keepout: 0;0;0;1
+    Kommode: 1.5x0.5
+        Keepout: 0;0;0;1
 
+Schlafzimmer 2:
+  Türen:
+    Flur
+  Maße: 4x6
+  Möbel:
+    Bett: 1.8x2
+        Keepout: 1;1;0;1
+    Schrank: 2x1
+        Keepout: 0;0;0;1
+    Schreibtisch: 1.5x0.5
+        Keepout: 0;0;0;1
 
 Badezimmer:
   Maße: 2x3
   Türen:
     Flur
   Möbel:
-    Dusche: 1x1
-    Waschbecken: 1x1
+    Waschbecken: 1.5x1
+    	Keepout: 0;0;0;1
     Toilette: 1x1
+        Keepout: 0;0;0;1
     Badewanne: 2x1
+        Keepout: 0;0;0;1
  
 
-Kinderzimmer:
+WC:
   Maße: 2x1
   Möbel:
-    Bett: 2x1
-    Schreibtisch: 1x1
-    Kommode: 2x1
+    Toilette: 1x1
+        Keepout: 0;0;0;0,5
+    Waschbecken: 0.5x0.5
+        Keepout: 0;0;0;0,5
   Türen:
     Flur

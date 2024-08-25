@@ -141,18 +141,19 @@ public class FileParser {
 
 				if (keepoutValues.length == 4) {
 					keepoutLinks = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
-					keepoutUnten = Double.parseDouble(keepoutValues[1].trim().replace(',', '.'));
-					keepoutRechts = Double.parseDouble(keepoutValues[2].trim().replace(',', '.'));
-					keepoutOben = Double.parseDouble(keepoutValues[3].trim().replace(',', '.'));
+					keepoutRechts = Double.parseDouble(keepoutValues[1].trim().replace(',', '.'));
+					keepoutOben = Double.parseDouble(keepoutValues[2].trim().replace(',', '.'));
+					keepoutUnten = Double.parseDouble(keepoutValues[3].trim().replace(',', '.'));
 				} else if (keepoutValues.length == 3) {
 					keepoutLinks = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
 					keepoutRechts = Double.parseDouble(keepoutValues[2].trim().replace(',', '.'));
+					keepoutUnten = Double.parseDouble(keepoutValues[1].trim().replace(',', '.'));
 					keepoutOben = 0;
 					keepoutUnten = Double.parseDouble(keepoutValues[1].trim().replace(',', '.'));
 				} else if (keepoutValues.length == 1) {
-					keepoutLinks = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
-					keepoutRechts = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
-					keepoutOben = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
+					keepoutLinks = 0;
+					keepoutRechts = 0;
+					keepoutOben = 0;
 					keepoutUnten = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
 				}
 			} else {

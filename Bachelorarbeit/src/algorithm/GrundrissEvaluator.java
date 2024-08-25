@@ -7,7 +7,7 @@ public class GrundrissEvaluator {
 	// Methode, die den besten Grundriss für ein Haus findet
 	public static Grundriss findeBestenGrundriss(Haus haus) { 
 	Grundriss besterGrundriss = null;
-	double bestesErgebnis = 0;
+	double bestesErgebnis = Double.MAX_VALUE;
 	
 	for (int i = 0; i < 100; i++) {
 		Grundriss grundriss = new Grundriss(haus);
