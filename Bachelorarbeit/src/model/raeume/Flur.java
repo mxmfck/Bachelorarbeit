@@ -6,11 +6,12 @@ import model.Moebelstueck;
 import model.Raum;
 import model.Tuer;
 
-public class Flur extends Raum{
+public class Flur extends Raum implements Cloneable{
 
 	public Flur(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren) {
 		super(name, laenge, breite, moebel, tueren);
 	}
+
 
 	
 }

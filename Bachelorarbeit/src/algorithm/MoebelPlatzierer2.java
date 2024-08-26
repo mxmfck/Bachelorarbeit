@@ -6,7 +6,7 @@ import java.util.List;
 import model.Fenster;
 import model.Moebelstueck;
 import model.RaumModell;
-import model.Tuer;
+import model.TuerModell;
 
 public class MoebelPlatzierer2 {
 
@@ -14,6 +14,12 @@ public class MoebelPlatzierer2 {
 	private static List<BlockierterBereich> blockierteFensterBereiche = new ArrayList<>();
 	private static List<Moebelstueck> nichtPlatzierbareMoebel = new ArrayList<>();
 
+	public static void einrichten(Grundriss grundriss) {
+		for (RaumModell raum : grundriss.getRaeume()) {
+			platziereMoebel(raum);
+		}
+	}
+	
 	public static void platziereMoebel(RaumModell raum) {
 		blockierteBereiche.clear();
 		nichtPlatzierbareMoebel.clear();
@@ -39,12 +45,151 @@ public class MoebelPlatzierer2 {
 				nichtVorFensterMoebel.remove(nichtVorFensterMoebel.indexOf(m));
 			}
 		}
+		for (Moebelstueck m : nichtVorFensterMoebel) {
+			if (!platziereAnWand(raum, m)) {
+				nichtPlatzierbareMoebel.add(m);
+			}
+			nichtVorFensterMoebel.remove(nichtVorFensterMoebel.indexOf(m));
+		}
+		
+		blockierteFensterBereiche.clear();
+		
+		// 3. Sortiere restliche Möbel
+		List<Moebelstueck> wandMoebel = new ArrayList<>();
+		for (Moebelstueck m : moebel) {
+			if (m.getKeepOutOben() == 0) {
+				wandMoebel.add(moebel.remove(moebel.indexOf(m)));
+			}
+		}
+		
+		for (Moebelstueck m : wandMoebel) {
+			if (!platziereAnWand(raum, m)) {
+				nichtPlatzierbareMoebel.add(m);
+			}
+			wandMoebel.remove(wandMoebel.indexOf(m));
+		}
+		
+		List<Moebelstueck> andereMoebel = moebel;
+		for (Moebelstueck m : andereMoebel) {
+			if (!platziereImRaum(raum, m)) {
+				nichtPlatzierbareMoebel.add(m);
+			}
+		}
+		
 
 	}
 
+	private static boolean platziereImRaum(RaumModell raum, Moebelstueck m) {
+		while (m.getAusrichtung() != 0)
+			m.drehen();
+
+		double startX = raum.getX();
+		double endX = raum.getX() + raum.getLaenge();
+		double startY = raum.getY();
+		double endY = raum.getY() + raum.getBreite();
+		
+		for (double x = startX + m.getKeepOutLinks(); x + m.getLaenge() + m.getKeepOutRechts() <= endX; x += 0.1) {
+			for (double y = startY+m.getKeepOutUnten(); y +m.getBreite()+m.getKeepOutOben() <= endY; y += 0.1) {
+				if (!kollidiert(raum, x, y, m)) {
+					m.setX(x);
+					m.setY(y);
+					blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+							m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+							m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+					System.out.println(
+							m.getClass().getSimpleName() + " im Raum platziert: x=" + m.getX() + ", y=" + m.getY());
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	private static boolean platziereAnWand(RaumModell raum, Moebelstueck m) {
+		while (m.getAusrichtung() != 0)
+			m.drehen();
+
+		double startX = raum.getX();
+		double endX = raum.getX() + raum.getLaenge();
+		double startY = raum.getY();
+		double endY = raum.getY() + raum.getBreite();
+
+		// Obere Wand
+		for (double x = startX + m.getKeepOutLinks(); x + m.getLaenge() + m.getKeepOutRechts() <= endX; x += 0.1) {
+			double y = raum.getY() + raum.getBreite() - (m.getBreite() + m.getKeepOutOben());
+			if (!kollidiert(raum, x, y, m)) {
+				m.setX(x);
+				m.setY(y);
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+				System.out.println(
+						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+				return true;
+			}
+		}
+
+		// Linke Wand
+		while (m.getAusrichtung() != 90)
+			m.drehen();
+
+		for (double y = startY + m.getKeepOutLinks(); y + m.getBreite() + m.getKeepOutRechts() <= endY; y += 0.1) {
+			double x = raum.getX() + m.getKeepOutOben();
+			if (!kollidiert(raum, x, y, m)) {
+				m.setX(x);
+				m.setY(y);
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutOben(),
+						m.getY() - m.getKeepOutLinks(), m.getLaenge() + m.getKeepOutOben() + m.getKeepOutUnten(),
+						m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+				System.out.println(
+						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+				return true;
+			}
+		}
+		
+		// Untere Wand
+		while (m.getAusrichtung() != 180)
+			m.drehen();
+		
+		for (double x = startX + m.getKeepOutRechts(); x + m.getLaenge() + m.getKeepOutLinks() <= endX; x += 0.1) {
+			double y = raum.getY() + m.getKeepOutOben();
+			if (!kollidiert(raum, x, y, m)) {
+				m.setX(x);
+				m.setY(y);
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutRechts(),
+						m.getY() - m.getKeepOutOben(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+				System.out.println(
+						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+				return true;
+			}
+		}
+		
+		// Rechte Wand
+		while (m.getAusrichtung() != 270)
+			m.drehen();
+		
+		for (double y = startY + m.getKeepOutRechts(); y + m.getBreite() + m.getKeepOutLinks() <= endY; y += 0.1) {
+			double x = raum.getX() + raum.getLaenge() - (m.getLaenge() + m.getKeepOutOben());
+			if (!kollidiert(raum, x, y, m)) {
+				m.setX(x);
+				m.setY(y);
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutUnten(),
+						m.getY() - m.getKeepOutRechts(), m.getLaenge() + m.getKeepOutUnten() + m.getKeepOutOben(),
+						m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+				System.out.println(
+						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private static boolean platziereInEcke(RaumModell raum, Moebelstueck m) {
-		double[][] ecken = { { raum.getX(), raum.getY() }, { raum.getX() + raum.getLaenge(), raum.getY() },
-				{ raum.getX(), raum.getY() + raum.getBreite() },
+		double[][] ecken = { { raum.getX(), raum.getY()+raum.getBreite() }, { raum.getX() , raum.getY() },
+				{ raum.getX()+raum.getLaenge(), raum.getY() },
 				{ raum.getX() + raum.getLaenge(), raum.getY() + raum.getBreite() } };
 
 		for (double[] ecke : ecken) {
@@ -57,41 +202,155 @@ public class MoebelPlatzierer2 {
 
 	private static boolean pruefeUndPlatziereInEcke(RaumModell raum, Moebelstueck m, double x, double y) {
 		boolean istLinkeEcke = (x == raum.getX());
-		boolean istObereEcke = (y == raum.getY());
+		boolean istObereEcke = (y == raum.getY()+raum.getBreite());
 
 		// Prüfe, ob das Möbelstück in der Ecke platziert werden kann
 		if (istLinkeEcke) {
 			if (istObereEcke) {
 				// Prüfe, ob das Möbelstück kollidiert
+				while (m.getAusrichtung() != 0)
+					m.drehen();
 				if (m.getKeepOutOben() == 0 && m.getKeepOutLinks() == 0) {
 					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - m.getKeepOutOben(), m)) {
 						m.setX(x + m.getKeepOutLinks());
 						m.setY(y - m.getKeepOutOben());
+						blockierteBereiche.add(
+								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
+										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 
 						System.out.println(
 								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 				}
-				if (m.getKeepOutOben() == 0 && m.getKeepOutRechts() == 0) {
+				while (m.getAusrichtung() != 0)
 					m.drehen();
+				if (m.getKeepOutOben() == 0 && m.getKeepOutRechts() == 0) {
+					while (m.getAusrichtung() != 90) {
+						m.drehen();
+					}
 					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - m.getKeepOutOben(), m)) {
 						m.setX(x + m.getKeepOutLinks());
 						m.setY(y - m.getKeepOutOben());
+						blockierteBereiche.add(
+								new BlockierterBereich(m.getX() - m.getKeepOutOben(), m.getY() - m.getKeepOutLinks(),
+										m.getLaenge() + m.getKeepOutOben() + m.getKeepOutUnten(),
+										m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
 						System.out.println(
 								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 				}
-			} else if (!istObereEcke) {//TODO
-				if (m.getKeepOutLinks() == 0 && m.getKeepOutUnten() == 0) {
-					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - m.getKeepOutOben(), m)) {
-						m.setX(x + m.getKeepOutLinks());
-						m.setY(y - m.getKeepOutOben());
+			} else if (!istObereEcke) {
 
+				while (m.getAusrichtung() != 0)
+					m.drehen();
+				if (m.getKeepOutLinks() == 0 && m.getKeepOutOben() == 0) {
+					while (m.getAusrichtung() != 90)
+						m.drehen();
+					if (!kollidiert(raum, x + m.getKeepOutLinks(), y + m.getKeepOutUnten(), m)) {
+						m.setX(x + m.getKeepOutLinks());
+						m.setY(y + m.getKeepOutUnten());
+						blockierteBereiche.add(
+								new BlockierterBereich(m.getX() - m.getKeepOutOben(), m.getY() - m.getKeepOutLinks(),
+										m.getLaenge() + m.getKeepOutOben() + m.getKeepOutUnten(),
+										m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
 						System.out.println(
 								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
+					}
+				}
+				while (m.getAusrichtung() != 0)
+					m.drehen();
+				if (m.getKeepOutOben() == 0 && m.getKeepOutRechts() == 0) {
+					while (m.getAusrichtung() != 180)
+						m.drehen();
+
+					if (!kollidiert(raum, x + m.getKeepOutLinks(), y + m.getKeepOutUnten(), m)) {
+						m.setX(x + m.getKeepOutLinks());
+						m.setY(y + m.getKeepOutUnten());
+						blockierteBereiche.add(
+								new BlockierterBereich(m.getX() - m.getKeepOutRechts(), m.getY() - m.getKeepOutOben(),
+										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+						System.out.println(
+								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+						return true;
+					}
+				}
+			}
+		} else if (!istLinkeEcke) {
+			if (!istObereEcke) {
+				while (m.getAusrichtung() != 0)
+					m.drehen();
+				if (m.getKeepOutOben() == 0 && m.getKeepOutLinks() == 0) {
+					while (m.getAusrichtung() != 180)
+						m.drehen();
+					if (!kollidiert(raum, x - m.getKeepOutRechts(), y + m.getKeepOutUnten(), m)) {
+						m.setX(x - m.getKeepOutRechts());
+						m.setY(y + m.getKeepOutUnten());
+						blockierteBereiche.add(
+								new BlockierterBereich(m.getX() - m.getKeepOutRechts(), m.getY() - m.getKeepOutOben(),
+										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+						System.out.println(
+								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+						return true;
+					}
+					while (m.getAusrichtung() != 0)
+						m.drehen();
+					if (m.getKeepOutOben() == 0 && m.getKeepOutRechts() == 0) {
+
+						while (m.getAusrichtung() != 270)
+							m.drehen();
+						if (!kollidiert(raum, x - m.getKeepOutRechts(), y + m.getKeepOutUnten(), m)) {
+							m.setX(x - m.getKeepOutRechts());
+							m.setY(y + m.getKeepOutUnten());
+							blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutUnten(),
+									m.getY() - m.getKeepOutRechts(),
+									m.getLaenge() + m.getKeepOutUnten() + m.getKeepOutOben(),
+									m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
+									+ ", y=" + m.getY());
+							return true;
+						}
+					}
+				}
+			} else if (istObereEcke) {
+				while (m.getAusrichtung() != 0)
+					m.drehen();
+				if (m.getKeepOutLinks() == 0 && m.getKeepOutOben() == 0) {
+					while (m.getAusrichtung() != 270)
+						m.drehen();
+					if (!kollidiert(raum, x - m.getKeepOutRechts(), y - m.getKeepOutOben(), m)) {
+						m.setX(x - m.getKeepOutRechts());
+						m.setY(y - m.getKeepOutOben());
+						blockierteBereiche.add(
+								new BlockierterBereich(m.getX() - m.getKeepOutUnten(), m.getY() - m.getKeepOutRechts(),
+										m.getLaenge() + m.getKeepOutUnten() + m.getKeepOutOben(),
+										m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+						System.out.println(
+								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+						return true;
+					}
+					while (m.getAusrichtung() != 0)
+						m.drehen();
+					if (m.getKeepOutOben() == 0 && m.getKeepOutRechts() == 0) {
+
+						while (m.getAusrichtung() != 0)
+							m.drehen();
+						if (!kollidiert(raum, x - m.getKeepOutRechts(), y - m.getKeepOutOben(), m)) {
+							m.setX(x - m.getKeepOutRechts());
+							m.setY(y - m.getKeepOutOben());
+							blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+									m.getY() - m.getKeepOutOben(),
+									m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+									m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
+									+ ", y=" + m.getY());
+							return true;
+						}
 					}
 				}
 			}
@@ -146,7 +405,7 @@ public class MoebelPlatzierer2 {
 	}
 
 	private static void blockiereTuerbereiche(RaumModell raum) {
-		for (Tuer tuer : raum.getTueren()) {
+		for (TuerModell tuer : raum.getTueren()) {
 			double x = tuer.getX();
 			double y = tuer.getY();
 			double breite = tuer.getBreite();

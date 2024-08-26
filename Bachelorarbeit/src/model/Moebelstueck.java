@@ -12,6 +12,7 @@ public abstract class Moebelstueck {
 	protected boolean platzierbarVorFenster = true; // Möbelstück kann vor einem Fenster platziert werden
 	private double x;
 	private double y;
+	private int ausrichtung;
 	
 
 	public Moebelstueck(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
@@ -22,7 +23,13 @@ public abstract class Moebelstueck {
 		this.keepOutRechts = keepOutRechts;
 		this.keepOutOben = keepOutOben;
 		this.keepOutUnten = keepOutUnten;
+		ausrichtung=0;
 	}
+	
+//	@Override
+//    public Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
 	
 
 	// Getter für alle Attribute
@@ -62,6 +69,10 @@ public abstract class Moebelstueck {
 		return platzierbarVorFenster;
 	}
 	
+	public int getAusrichtung() {
+		return ausrichtung;
+	}
+	
 	// Setter für die Position des Möbelstücks
 	public void setX(double x) {
 		this.x = x;
@@ -72,7 +83,7 @@ public abstract class Moebelstueck {
 	}
 	
 	public void drehen() {
-		double tmp = laenge;
+		double tmp = breite;
 		breite = laenge;
 		laenge =tmp;
 		
@@ -81,6 +92,7 @@ public abstract class Moebelstueck {
 		keepOutOben = keepOutRechts;
 		keepOutRechts = keepOutUnten;
 		keepOutUnten = tmp2;
+		ausrichtung = (ausrichtung+90)%360; 
 	}
 
 	public String toString() {

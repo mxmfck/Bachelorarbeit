@@ -5,17 +5,23 @@ import model.Haus;
 public class GrundrissEvaluator {
 
 	// Methode, die den besten Grundriss für ein Haus findet
-	public static Grundriss findeBestenGrundriss(Haus haus) { 
+	public static Grundriss findeBestenGrundriss(Haus haus)  { 
 	Grundriss besterGrundriss = null;
 	double bestesErgebnis = Double.MAX_VALUE;
 	
 	for (int i = 0; i < 100; i++) {
-		Grundriss grundriss = new Grundriss(haus);
-		double ergebnis = berechneErgebnis(grundriss);
-		if (ergebnis < bestesErgebnis) {
-			bestesErgebnis = ergebnis;
-			besterGrundriss = grundriss;
-		}
+//		try {
+//			Haus hausClone = (Haus) haus.clone();
+			Grundriss grundriss = new Grundriss(haus);
+			double ergebnis = berechneErgebnis(grundriss);
+			if (ergebnis < bestesErgebnis) {
+				bestesErgebnis = ergebnis;
+				besterGrundriss = grundriss;
+			}
+//		} catch (CloneNotSupportedException e) {
+//			e.printStackTrace();
+//		}
+		
 	}
 	
 	return besterGrundriss;

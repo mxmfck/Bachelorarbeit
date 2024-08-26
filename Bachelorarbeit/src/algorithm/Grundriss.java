@@ -8,6 +8,7 @@ import model.Haus;
 import model.Raum;
 import model.RaumModell;
 import model.Tuer;
+import model.TuerModell;
 
 public class Grundriss {
 	// Klasse, die einen kompletten Grundriss speichert
@@ -37,21 +38,21 @@ public class Grundriss {
 	public void addRaum(RaumModell raum) {
 		raeume.add(raum);
 	}
-	
+
 	public double getMaxLinks() {
 		return maxLinks;
 	}
-	
+
 	public double getMaxRechts() {
 		return maxRechts;
 	}
-	
+
 	public double getYLinks() {
 		return yLinks;
 	}
-	
+
 	public double getYRechts() {
-        return yRechts;
+		return yRechts;
 	}
 
 	// Methode zum Berechnen des Grundrisses
@@ -89,9 +90,14 @@ public class Grundriss {
 		for (int i = 0; i < tmpRaeume.size(); i++) {
 			if (tmpRaeume.get(i).getName().equals("Flur")) {
 				Raum flur = tmpRaeume.remove(i);
-				flur.addTuer(new Tuer(null, flur, 0.92));
+				List<TuerModell> tueren = new ArrayList<>();
+				for (Tuer tuer : flur.getTueren()) {
+					tueren.add(
+							new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
+				}
+//				flur.addTuer(new Tuer(null, flur, 0.92));
 				raeume.add(new RaumModell(flur.getName(), flur.getLaenge(), flur.getBreite(), flur.getMoebel(),
-						flur.getTueren(), 0, 0));
+						tueren, 0, 0));
 				return;
 			}
 		}
@@ -119,7 +125,7 @@ public class Grundriss {
 		platziereRaumSeite(raum, tmpRaeume, false);
 	}
 
-	//Methode die den Raum letztendlich platziert
+	// Methode die den Raum letztendlich platziert
 	private void platziereRaumSeite(Raum raum, List<Raum> tmpRaeume, boolean links) {
 		List<RaumModell> raeume = links ? raeumeLinks : raeumeRechts;
 		double x = links ? xLinks : xRechts;
@@ -130,21 +136,36 @@ public class Grundriss {
 			raeume = new ArrayList<>();
 			double random = Math.random();
 			if (random < 0.5) {
+				List<TuerModell> tueren = new ArrayList<>();
+				for (Tuer tuer : raum.getTueren()) {
+					tueren.add(
+							new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
+				}
 				raeume.add(new RaumModell(raum.getName(), raum.getLaenge(), raum.getBreite(), raum.getMoebel(),
-						raum.getTueren(), links ? x - raum.getLaenge() : x, y));
+						tueren, links ? x - raum.getLaenge() : x, y));
 				y += raum.getBreite();
 				max = links ? raum.getLaenge() : x + raum.getLaenge();
 			} else {
+				List<TuerModell> tueren = new ArrayList<>();
+				for (Tuer tuer : raum.getTueren()) {
+					tueren.add(
+							new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
+				}
 				raeume.add(new RaumModell(raum.getName(), raum.getBreite(), raum.getLaenge(), raum.getMoebel(),
-						raum.getTueren(), links ? x - raum.getBreite() : x, y));
+						tueren, links ? x - raum.getBreite() : x, y));
 				y += raum.getLaenge();
 				max = links ? raum.getBreite() : x + raum.getBreite();
 			}
 		} else {
 			if (Math.abs(raum.getLaenge() - raeume.get(raeume.size() - 1).getLaenge()) < Math
 					.abs(raum.getBreite() - raeume.get(raeume.size() - 1).getLaenge())) {
+				List<TuerModell> tueren = new ArrayList<>();
+				for (Tuer tuer : raum.getTueren()) {
+					tueren.add(
+							new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
+				}
 				raeume.add(new RaumModell(raum.getName(), raum.getLaenge(), raum.getBreite(), raum.getMoebel(),
-						raum.getTueren(), links ? x - raum.getLaenge() : x, y));
+						tueren, links ? x - raum.getLaenge() : x, y));
 				y += raum.getBreite();
 				if (links) {
 					if (max < raum.getLaenge()) {
@@ -156,8 +177,13 @@ public class Grundriss {
 					}
 				}
 			} else {
+				List<TuerModell> tueren = new ArrayList<>();
+				for (Tuer tuer : raum.getTueren()) {
+					tueren.add(
+							new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
+				}
 				raeume.add(new RaumModell(raum.getName(), raum.getBreite(), raum.getLaenge(), raum.getMoebel(),
-						raum.getTueren(), links ? x - raum.getBreite() : x, y));
+						tueren, links ? x - raum.getBreite() : x, y));
 				y += raum.getLaenge();
 				if (links) {
 					if (max < raum.getBreite()) {
@@ -240,116 +266,128 @@ public class Grundriss {
 
 		verarbeiteRaeume(raeumeLinks, true);
 		verarbeiteRaeume(raeumeRechts, false);
-		
+
 		platziereFlurTuer();
 
 	}
-	
+
 	// Verarbeitet alle Türen für die gegebenen Räume
 	private void verarbeiteRaeume(List<RaumModell> raeume, boolean istLinks) {
-	    for (RaumModell raum : raeume) {
-	        for (Tuer tuer : raum.getTueren()) {
-	            if (tuer.getVonRaum().getName().equals("Flur")) {
-	                platziereFlurTuer(raum, tuer, istLinks);
-	            } else if (tuer.getInRaum().getName().equals(raum.getName())) {
-	                platziereZwischenTuer(raum, tuer, raeume, istLinks);
-	            }
-	        }
-	    }
+		for (RaumModell raum : raeume) {
+			for (TuerModell tuer : raum.getTueren()) {
+				if (tuer.getVonRaum().getName().equals("Flur")) {
+					platziereFlurTuer(raum, tuer, istLinks);
+				} else if (tuer.getInRaum().getName().equals(raum.getName())) {
+					platziereZwischenTuer(raum, tuer, raeume, istLinks);
+				}
+			}
+		}
 	}
 
-    // Platziert die Tür für den Flur
-	private void platziereFlurTuer(RaumModell raum, Tuer tuer, boolean istLinks) {
+	// Platziert die Tür für den Flur
+	private void platziereFlurTuer(RaumModell raum, TuerModell tuer, boolean istLinks) {
 
-	    if (raum.getBreite() > 1.12) {
-	        if (Math.random() < 0.5) {
-	            tuer.setX(raum.getX() + (istLinks?raum.getLaenge():0));
-	            tuer.setY(raum.getY() + 0.1);
-	            tuer.setHorizontal(false);
-	            tuer.setLinksOeffnend(false);
-	        } else {
-	            tuer.setX(raum.getX() + (istLinks?raum.getLaenge():0));
-	            tuer.setY(raum.getY() + raum.getBreite() - (0.1 + tuer.getBreite()));
-	            tuer.setHorizontal(false);
-	            tuer.setLinksOeffnend(true);
-	        }
-	    } else {
-	        tuer.setX(raum.getX() + (istLinks?raum.getLaenge():0));
-	        tuer.setY(raum.getY() + (raum.getBreite() - tuer.getBreite()) / 2);
-	        tuer.setHorizontal(false);
-	        tuer.setLinksOeffnend(true);
-	    }
+		if (raum.getBreite() > 1.12) {
+			double random = Math.random();
+			if (random < 0.5) {
+				tuer.setX(raum.getX() + (istLinks ? raum.getLaenge() : 0));
+				tuer.setY(raum.getY() + 0.1);
+				tuer.setHorizontal(false);
+				tuer.setLinksOeffnend(false);
+
+				
+			} else {
+				tuer.setX(raum.getX() + (istLinks ? raum.getLaenge() : 0));
+				tuer.setY(raum.getY() + raum.getBreite() - (0.1 + tuer.getBreite()));
+				tuer.setHorizontal(false);
+				tuer.setLinksOeffnend(true);
+
+				}
+		} else {
+			tuer.setX(raum.getX() + (istLinks ? raum.getLaenge() : 0));
+			tuer.setY(raum.getY() + (raum.getBreite() - tuer.getBreite()) / 2);
+			tuer.setHorizontal(false);
+			tuer.setLinksOeffnend(true);
+
+			}
+
 	}
 
 	// Platziert die Tür zwischen zwei Räumen
-	private void platziereZwischenTuer(RaumModell inRaum, Tuer tuer, List<RaumModell> raeume, boolean istLinks) {
-	    RaumModell vonRaum = findeRaumByNameModell(tuer.getVonRaum().getName(), raeume);
-	    Tuer vonRaumTuer = findeTuerByName(tuer.getInRaum().getName(), vonRaum.getTueren());
+	private void platziereZwischenTuer(RaumModell inRaum, TuerModell tuer, List<RaumModell> raeume, boolean istLinks) {
+		RaumModell vonRaum = findeRaumByNameModell(tuer.getVonRaum().getName(), raeume);
+		TuerModell vonRaumTuer = findeTuerByName(tuer.getInRaum().getName(), vonRaum.getTueren());
 
-	    if (inRaum.getY() + inRaum.getBreite() == vonRaum.getY()) {
-	        platziereTuerObenUnten(tuer, vonRaumTuer, inRaum, vonRaum, true, istLinks);
-	    } else if (vonRaum.getY() + vonRaum.getBreite() == inRaum.getY()) {
-	        platziereTuerObenUnten(tuer, vonRaumTuer, inRaum, vonRaum, false, istLinks);
-	    }
+		if (inRaum.getY() + inRaum.getBreite() == vonRaum.getY()) {
+			platziereTuerObenUnten(tuer, vonRaumTuer, inRaum, vonRaum, true, istLinks);
+		} else if (vonRaum.getY() + vonRaum.getBreite() == inRaum.getY()) {
+			platziereTuerObenUnten(tuer, vonRaumTuer, inRaum, vonRaum, false, istLinks);
+		}
 	}
 
 	// Platziert die Tür zwischen zwei Räumen, wenn der eine über dem anderen liegt
-	private void platziereTuerObenUnten(Tuer tuer, Tuer vonRaumTuer, RaumModell inRaum, RaumModell vonRaum, boolean vonRaumUeberInRaum, boolean istLinks) {
-	    switch (Double.compare(inRaum.getLaenge() - vonRaum.getLaenge(), 0.0)) {
-	        case 0: //Räume gleich lang
+	private void platziereTuerObenUnten(TuerModell tuer, TuerModell vonRaumTuer, RaumModell inRaum, RaumModell vonRaum,
+			boolean vonRaumUeberInRaum, boolean istLinks) {
+		switch (Double.compare(inRaum.getLaenge() - vonRaum.getLaenge(), 0.0)) {
+		case 0: // Räume gleich lang
 //	            tuer.setX(inRaum.getX() + (vonRaumUeberInRaum ? inRaum.getLaenge() - (0.1 + tuer.getBreite()) : 0.1));
 //	            tuer.setY(vonRaumUeberInRaum ? inRaum.getY() : vonRaum.getY());
 //	            tuer.setHorizontal(true);
 //	            tuer.setLinksOeffnend(!vonRaumUeberInRaum);
 
-	        	tuer.setX(istLinks? vonRaum.getX()+ 0.1: vonRaum.getX()+vonRaum.getLaenge()-(0.1+tuer.getBreite()));
-	        	tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
-	        	tuer.setHorizontal(true);
-	        	tuer.setLinksOeffnend(vonRaumUeberInRaum);
-	        	
-	            vonRaumTuer.setX(istLinks? vonRaum.getX()+ 0.1: vonRaum.getX()+vonRaum.getLaenge()-(0.1+tuer.getBreite()));
-	            vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
-	            vonRaumTuer.setHorizontal(true);
-	            vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
-	            break;
+			tuer.setX(
+					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
+			tuer.setHorizontal(true);
+			tuer.setLinksOeffnend(vonRaumUeberInRaum);
 
-	        case 1: //inRaum länger als vonRaum
-	            tuer.setX(istLinks? vonRaum.getX()+ 0.1: vonRaum.getX()+vonRaum.getLaenge()-(0.1+tuer.getBreite()));
-	            tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
-	            tuer.setHorizontal(true);
-	            tuer.setLinksOeffnend(vonRaumUeberInRaum);
+			vonRaumTuer.setX(
+					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
+			vonRaumTuer.setHorizontal(true);
+			vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
+			break;
 
-	            vonRaumTuer.setX(istLinks? vonRaum.getX()+ 0.1: vonRaum.getX()+vonRaum.getLaenge()-(0.1+tuer.getBreite()));
-	            vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
-	            vonRaumTuer.setHorizontal(true);
-	            vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
-	            break;
+		case 1: // inRaum länger als vonRaum
+			tuer.setX(
+					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
+			tuer.setHorizontal(true);
+			tuer.setLinksOeffnend(vonRaumUeberInRaum);
 
-	        case -1: //vonRaum länger als inRaum
-	            tuer.setX(istLinks? inRaum.getX()+ 0.1: inRaum.getX()+inRaum.getLaenge()-(0.1+tuer.getBreite()));
-	            tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
-	            tuer.setHorizontal(true);
-	            tuer.setLinksOeffnend(vonRaumUeberInRaum);
+			vonRaumTuer.setX(
+					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
+			vonRaumTuer.setHorizontal(true);
+			vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
+			break;
 
-	            vonRaumTuer.setX(istLinks? inRaum.getX()+ 0.1: inRaum.getX()+inRaum.getLaenge()-(0.1+tuer.getBreite()));
-	            vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
-	            vonRaumTuer.setHorizontal(true);
-	            vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
-	            break;
-	    }
+		case -1: // vonRaum länger als inRaum
+			tuer.setX(istLinks ? inRaum.getX() + 0.1 : inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
+			tuer.setHorizontal(true);
+			tuer.setLinksOeffnend(vonRaumUeberInRaum);
+
+			vonRaumTuer.setX(
+					istLinks ? inRaum.getX() + 0.1 : inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
+			vonRaumTuer.setHorizontal(true);
+			vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
+			break;
+		}
 	}
 
 	// Platziert Eingangstür zum Flur
 	private void platziereFlurTuer() {
-	    RaumModell flur = raeume.get(0);
-	    Tuer flurTuer = findeTuerByName("Flur", flur.getTueren());
+		RaumModell flur = raeume.get(0);
+		TuerModell flurTuer = findeEingangsTuer(flur.getTueren());
 
-	    if (flurTuer != null) {
-	        flurTuer.setX((flur.getBreite() - flurTuer.getBreite()) / 2);
-	        flurTuer.setY(flur.getY());
-	        flurTuer.setHorizontal(true);
-	        flurTuer.setLinksOeffnend(true);
-	    }
+		if (flurTuer != null) {
+			flurTuer.setX((flur.getBreite() - flurTuer.getBreite()) / 2);
+			flurTuer.setY(flur.getY());
+			flurTuer.setHorizontal(true);
+			flurTuer.setLinksOeffnend(true);
+		}
 	}
 
 	// Findet eine Tür anhand des Namens in einer Liste von Türen
@@ -363,87 +401,99 @@ public class Grundriss {
 	}
 
 	// Methode zum Erzeugen der Fenster im Grundriss
-	private void erzeugeFenster() { 
-		
+	private void erzeugeFenster() {
+
 		verarbeiteRaeumemitFenstern(raeumeLinks, true);
 		verarbeiteRaeumemitFenstern(raeumeRechts, false);
 		platziereFlurFenster();
 	}
-	
+
 	// Verarbeitet Räume mit Fenstern
 	private void verarbeiteRaeumemitFenstern(List<RaumModell> raeume, boolean istLinks) {
 		for (int i = 0; i < raeume.size(); i++) {
-	        RaumModell raum = raeume.get(i);
+			RaumModell raum = raeume.get(i);
 
-	        if ((raum.getName().contains("Badezimmer") || raum.getName().contains("WC"))&&(i==0||i==raeume.size()-1)) {
-	            platziereFensterInKleinenRaumen(raum);
-	        } else {
-	            if (i == 0) { // Erster Raum
-	                platziereFensterImErstenRaum(raum, istLinks);
-	            } else if (i == raeume.size() - 1) { // Letzter Raum
-	                platziereFensterImLetztenRaum(raum, istLinks);
-	            } else { // Mittlere Räume
-	                platziereFensterInMittlerenRaumen(raum, istLinks);
-	            }
-	        }
-	    }
+			if ((raum.getName().contains("Badezimmer") || raum.getName().contains("WC"))
+					&& (i == 0 || i == raeume.size() - 1)) {
+				platziereFensterInKleinenRaumen(raum);
+			} else {
+				if (i == 0) { // Erster Raum
+					platziereFensterImErstenRaum(raum, istLinks);
+				} else if (i == raeume.size() - 1) { // Letzter Raum
+					platziereFensterImLetztenRaum(raum, istLinks);
+				} else { // Mittlere Räume
+					platziereFensterInMittlerenRaumen(raum, istLinks);
+				}
+			}
+		}
 	}
-	
+
 	// Platziert Fenster im ersten Raum
 	private void platziereFensterImErstenRaum(RaumModell raum, boolean istLinks) {
-	    platziereFenster(raum, true, raum.getX(), raum.getY());
-	    platziereFenster(raum, false, istLinks ? raum.getX() : raum.getX() + raum.getLaenge(), raum.getY()); //Test
+		platziereFenster(raum, true, raum.getX(), raum.getY());
+		platziereFenster(raum, false, istLinks ? raum.getX() : raum.getX() + raum.getLaenge(), raum.getY()); // Test
 	}
 
 	// Platziert Fenster im letzten Raum
 	private void platziereFensterImLetztenRaum(RaumModell raum, boolean istLinks) {
-	    platziereFenster(raum, true, raum.getX(), raum.getY() + raum.getBreite());
-	    platziereFenster(raum, false, istLinks ? raum.getX(): raum.getX()+raum.getLaenge(), raum.getY()); //Test
+		platziereFenster(raum, true, raum.getX(), raum.getY() + raum.getBreite());
+		platziereFenster(raum, false, istLinks ? raum.getX() : raum.getX() + raum.getLaenge(), raum.getY()); // Test
 	}
 
 	// Platziert Fenster in mittleren Räumen
 	private void platziereFensterInMittlerenRaumen(RaumModell raum, boolean istLinks) {
-	    platziereFenster(raum, false, istLinks ? raum.getX() : raum.getX() + raum.getLaenge(), raum.getY());
+		platziereFenster(raum, false, istLinks ? raum.getX() : raum.getX() + raum.getLaenge(), raum.getY());
 	}
 
 	// Platziert Fenster in kleinen Räumen
 	private void platziereFensterInKleinenRaumen(RaumModell raum) {
-	    if (raum.getLaenge() < raum.getBreite()) {
-	        raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2, raum.getY(), 0.8, true));
-	    } else {
-	        raum.addFenster(new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
-	    }
+		if (raum.getLaenge() < raum.getBreite()) {
+			raum.addFenster(new Fenster(raum.getX() + (raum.getLaenge() - 0.8) / 2, raum.getY(), 0.8, true));
+		} else {
+			raum.addFenster(new Fenster(raum.getX(), raum.getY() + (raum.getBreite() - 0.8) / 2, 0.8, false));
+		}
 	}
-	
+
 	// Platziert Fenster in einem Raum
 	private void platziereFenster(RaumModell raum, boolean horizontal, double xKoordinate, double yKoordinate) {
-	    double fensterGroesse;
+		double fensterGroesse;
 
-	    if (raum.getLaenge() <= 2 || raum.getBreite() <= 2) {
-	        fensterGroesse = 0.8;
-	    } else if (raum.getLaenge() <= 4 || raum.getBreite() <= 4) {
-	        fensterGroesse = 1.1;
-	    } else {
-	        fensterGroesse = 1.5;
-	    }
+		if (raum.getLaenge() <= 2 || raum.getBreite() <= 2) {
+			fensterGroesse = 0.8;
+		} else if (raum.getLaenge() <= 4 || raum.getBreite() <= 4) {
+			fensterGroesse = 1.1;
+		} else {
+			fensterGroesse = 1.5;
+		}
 
-	    if (horizontal) {
-	        raum.addFenster(new Fenster(xKoordinate + (raum.getLaenge() - fensterGroesse) / 2, yKoordinate, fensterGroesse, true));
-	    } else {
-	        raum.addFenster(new Fenster(xKoordinate, yKoordinate + (raum.getBreite() - fensterGroesse) / 2, fensterGroesse, false));
-	    }
+		if (horizontal) {
+			raum.addFenster(new Fenster(xKoordinate + (raum.getLaenge() - fensterGroesse) / 2, yKoordinate,
+					fensterGroesse, true));
+		} else {
+			raum.addFenster(new Fenster(xKoordinate, yKoordinate + (raum.getBreite() - fensterGroesse) / 2,
+					fensterGroesse, false));
+		}
 	}
 
 	// Platziert das Fenster im Flur
 	private void platziereFlurFenster() {
-	    RaumModell flur = raeume.get(0);
-	    platziereFenster(flur, true, flur.getX(), flur.getY() + flur.getBreite());
+		RaumModell flur = raeume.get(0);
+		platziereFenster(flur, true, flur.getX(), flur.getY() + flur.getBreite());
 	}
 
 	// Findet eine Tür anhand des Namens in einer Liste von Türen
-	private Tuer findeTuerByName(String name, List<Tuer> tueren) {
-		for (Tuer tuer : tueren) {
+	private TuerModell findeTuerByName(String name, List<TuerModell> tueren) {
+		for (TuerModell tuer : tueren) {
 			if (tuer.getInRaum().getName().equals(name)) {
+				return tuer;
+			}
+		}
+		return null;
+	}
+
+	private TuerModell findeEingangsTuer(List<TuerModell> tueren) {
+		for (TuerModell tuer : tueren) {
+			if (tuer.getInRaum().getName().equals("Flur") && tuer.getVonRaum() == null) {
 				return tuer;
 			}
 		}

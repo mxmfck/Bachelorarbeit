@@ -12,10 +12,10 @@ public class RaumModell{
 	private double x;
 	private double y;
 	private List<Moebelstueck> moebel;
-	private List<Tuer> tueren;
+	private List<TuerModell> tueren;
 	private List<Fenster> fenster;
 
-	public RaumModell(String name, double laenge, double breite, List<Moebelstueck> moebel, List<Tuer> tueren, double x,
+	public RaumModell(String name, double laenge, double breite, List<Moebelstueck> moebel, List<TuerModell> tueren, double x,
 			double y) {
 		this.name = name;
 		this.laenge = laenge;
@@ -63,7 +63,7 @@ public class RaumModell{
 		return moebel;
 	}
 
-	public List<Tuer> getTueren() {
+	public List<TuerModell> getTueren() {
 		return tueren;
 	}
 	
