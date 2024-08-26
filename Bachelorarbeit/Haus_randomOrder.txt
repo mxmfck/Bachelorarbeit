@@ -25,7 +25,7 @@ Küche:
   Türen:
     Wohnzimmer
     Flur
-  Maße: 3x5
+  Maße: 4x6
 
 Schlafzimmer 1:
   Türen:
@@ -42,7 +42,7 @@ Schlafzimmer 1:
 Schlafzimmer 2:
   Türen:
     Flur
-  Maße: 4x6
+  Maße: 5x6
   Möbel:
     Bett: 1.8x2
         Keepout: 1;1;0;1
@@ -52,7 +52,7 @@ Schlafzimmer 2:
         Keepout: 0;0;0;1
 
 Badezimmer:
-  Maße: 2x3
+  Maße: 4x5
   Türen:
     Flur
   Möbel:
@@ -65,7 +65,7 @@ Badezimmer:
  
 
 WC:
-  Maße: 2x1
+  Maße: 3x2
   Möbel:
     Toilette: 1x1
         Keepout: 0;0;0;0,5

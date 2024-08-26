@@ -1,6 +1,7 @@
 package algorithm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import model.Fenster;
@@ -10,76 +11,107 @@ import model.TuerModell;
 
 public class MoebelPlatzierer2 {
 
-	private static List<BlockierterBereich> blockierteBereiche = new ArrayList<>();
-	private static List<BlockierterBereich> blockierteFensterBereiche = new ArrayList<>();
-	private static List<Moebelstueck> nichtPlatzierbareMoebel = new ArrayList<>();
+//	private static List<BlockierterBereich> blockierteBereiche = new ArrayList<>();
+//	private static List<BlockierterBereich> blockierteFensterBereiche = new ArrayList<>();
+//	private static List<Moebelstueck> nichtPlatzierbareMoebel = new ArrayList<>();
 
 	public static void einrichten(Grundriss grundriss) {
 		for (RaumModell raum : grundriss.getRaeume()) {
 			platziereMoebel(raum);
 		}
 	}
-	
+
 	public static void platziereMoebel(RaumModell raum) {
-		blockierteBereiche.clear();
-		nichtPlatzierbareMoebel.clear();
-		List<Moebelstueck> moebel;
+		List<BlockierterBereich> blockierteBereiche = new ArrayList<>();
+		List<BlockierterBereich> blockierteFensterBereiche = new ArrayList<>();
+		int counter = 0;
+		List<Moebelstueck> nichtPlatzierbareMoebel = new ArrayList<>();
+		do {
+			blockierteBereiche.clear();
+			nichtPlatzierbareMoebel.clear();
+			List<Moebelstueck> moebel;
 
-		// 1. Blockiere Bereiche vor Türen und Fenstern
-		blockiereTuerbereiche(raum);
-		blockiereFensterbereiche(raum);
+			// 1. Blockiere Bereiche vor Türen und Fenstern
+			blockiereTuerbereiche(raum, blockierteBereiche);
+			blockiereFensterbereiche(raum, blockierteFensterBereiche);
 
-		if (raum.getMoebel() == null || raum.getMoebel().isEmpty())
-			return;
-		moebel = new ArrayList<>(raum.getMoebel());
+			if (raum.getMoebel() == null || raum.getMoebel().isEmpty())
+				return;
+			moebel = new ArrayList<>(raum.getMoebel());
+			Collections.shuffle(moebel);
 
-		// 2. Platziere Möbel, die nicht vor Fenster dürfen, in Ecken
-		List<Moebelstueck> nichtVorFensterMoebel = new ArrayList<>();
-		for (Moebelstueck m : moebel) {
-			if (!m.isPlatzierbarVorFenster()) {
-				nichtVorFensterMoebel.add(moebel.remove(moebel.indexOf(m)));
+			// 2. Platziere Möbel, die nicht vor Fenster dürfen, in Ecken
+			List<Moebelstueck> nichtVorFensterMoebel = new ArrayList<>();
+			for (int i = 0; i < moebel.size(); i++) {
+				if (!moebel.get(i).isPlatzierbarVorFenster()) {
+					nichtVorFensterMoebel.add(moebel.remove(i));
+
+					i--;
+				}
 			}
-		}
-		for (Moebelstueck m : nichtVorFensterMoebel) {
-			if (platziereInEcke(raum, m)) {
-				nichtVorFensterMoebel.remove(nichtVorFensterMoebel.indexOf(m));
+			for (int i = 0; i < nichtVorFensterMoebel.size(); i++) {
+				if (platziereInEcke(raum, nichtVorFensterMoebel.get(i), blockierteBereiche, blockierteFensterBereiche)) {
+					nichtVorFensterMoebel.remove(nichtVorFensterMoebel.get(i));
+					i--;
+				}
+
 			}
-		}
-		for (Moebelstueck m : nichtVorFensterMoebel) {
-			if (!platziereAnWand(raum, m)) {
-				nichtPlatzierbareMoebel.add(m);
+
+			for (int i = 0; i < nichtVorFensterMoebel.size(); i++) {
+				if (platziereAnWand(raum, nichtVorFensterMoebel.get(i), blockierteBereiche, blockierteFensterBereiche)) {
+					nichtVorFensterMoebel.remove(nichtVorFensterMoebel.get(i));
+					i--;
+				} else {
+					nichtPlatzierbareMoebel.add(nichtVorFensterMoebel.get(i));
+					i--;
+				}
 			}
-			nichtVorFensterMoebel.remove(nichtVorFensterMoebel.indexOf(m));
-		}
-		
-		blockierteFensterBereiche.clear();
-		
-		// 3. Sortiere restliche Möbel
-		List<Moebelstueck> wandMoebel = new ArrayList<>();
-		for (Moebelstueck m : moebel) {
-			if (m.getKeepOutOben() == 0) {
-				wandMoebel.add(moebel.remove(moebel.indexOf(m)));
+
+//		for (Moebelstueck m : nichtVorFensterMoebel) {
+//			if (!platziereAnWand(raum, m)) {
+//				nichtPlatzierbareMoebel.add(m);
+//			}
+//			nichtVorFensterMoebel.remove(nichtVorFensterMoebel.indexOf(m));
+//		}
+
+			blockierteFensterBereiche.clear();
+
+			// 3. Sortiere restliche Möbel
+			List<Moebelstueck> wandMoebel = new ArrayList<>();
+			for (int i = 0; i < moebel.size(); i++) {
+				if (moebel.get(i).getKeepOutOben() == 0) {
+					wandMoebel.add(moebel.remove(i));
+					i--;
+				}
 			}
-		}
-		
-		for (Moebelstueck m : wandMoebel) {
-			if (!platziereAnWand(raum, m)) {
-				nichtPlatzierbareMoebel.add(m);
+
+			for (int i = 0; i < wandMoebel.size(); i++) {
+				if (!platziereAnWand(raum, wandMoebel.get(i), blockierteBereiche, blockierteFensterBereiche)) {
+					nichtPlatzierbareMoebel.add(wandMoebel.get(i));
+				}
+				wandMoebel.remove(wandMoebel.get(i));
+				i--;
 			}
-			wandMoebel.remove(wandMoebel.indexOf(m));
-		}
-		
-		List<Moebelstueck> andereMoebel = moebel;
-		for (Moebelstueck m : andereMoebel) {
-			if (!platziereImRaum(raum, m)) {
-				nichtPlatzierbareMoebel.add(m);
+
+			List<Moebelstueck> andereMoebel = moebel;
+			andereMoebel.addAll(nichtPlatzierbareMoebel);
+			nichtPlatzierbareMoebel.clear();
+			for (int i = 0; i < andereMoebel.size(); i++) {
+				if (!platziereImRaum(raum, andereMoebel.get(i), blockierteBereiche, blockierteFensterBereiche)) {
+					nichtPlatzierbareMoebel.add(andereMoebel.remove(i));
+					i--;
+				}
 			}
+			counter++;
+		} while (nichtPlatzierbareMoebel.size() > 0 && counter < 50);
+		if (counter >= 50) {
+			throw new RuntimeException(
+					"Es konnten nicht alle Möbel im Raum " + raum.getName()+" platziert werden. Bitte überprüfen Sie die Anforderungen.");
 		}
-		
 
 	}
 
-	private static boolean platziereImRaum(RaumModell raum, Moebelstueck m) {
+	private static boolean platziereImRaum(RaumModell raum, Moebelstueck m, List<BlockierterBereich> blockierteBereiche, List<BlockierterBereich> blockierteFensterBereiche) {
 		while (m.getAusrichtung() != 0)
 			m.drehen();
 
@@ -87,10 +119,10 @@ public class MoebelPlatzierer2 {
 		double endX = raum.getX() + raum.getLaenge();
 		double startY = raum.getY();
 		double endY = raum.getY() + raum.getBreite();
-		
+
 		for (double x = startX + m.getKeepOutLinks(); x + m.getLaenge() + m.getKeepOutRechts() <= endX; x += 0.1) {
-			for (double y = startY+m.getKeepOutUnten(); y +m.getBreite()+m.getKeepOutOben() <= endY; y += 0.1) {
-				if (!kollidiert(raum, x, y, m)) {
+			for (double y = startY + m.getKeepOutUnten(); y + m.getBreite() + m.getKeepOutOben() <= endY; y += 0.1) {
+				if (!kollidiert(raum, x, y, m, blockierteBereiche, blockierteFensterBereiche)) {
 					m.setX(x);
 					m.setY(y);
 					blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
@@ -102,11 +134,11 @@ public class MoebelPlatzierer2 {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	private static boolean platziereAnWand(RaumModell raum, Moebelstueck m) {
+
+	private static boolean platziereAnWand(RaumModell raum, Moebelstueck m, List<BlockierterBereich> blockierteBereiche, List<BlockierterBereich> blockierteFensterBereiche) {
 		while (m.getAusrichtung() != 0)
 			m.drehen();
 
@@ -118,7 +150,7 @@ public class MoebelPlatzierer2 {
 		// Obere Wand
 		for (double x = startX + m.getKeepOutLinks(); x + m.getLaenge() + m.getKeepOutRechts() <= endX; x += 0.1) {
 			double y = raum.getY() + raum.getBreite() - (m.getBreite() + m.getKeepOutOben());
-			if (!kollidiert(raum, x, y, m)) {
+			if (!kollidiert(raum, x, y, m, blockierteBereiche, blockierteFensterBereiche)) {
 				m.setX(x);
 				m.setY(y);
 				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
@@ -136,48 +168,48 @@ public class MoebelPlatzierer2 {
 
 		for (double y = startY + m.getKeepOutLinks(); y + m.getBreite() + m.getKeepOutRechts() <= endY; y += 0.1) {
 			double x = raum.getX() + m.getKeepOutOben();
-			if (!kollidiert(raum, x, y, m)) {
+			if (!kollidiert(raum, x, y, m, blockierteBereiche, blockierteFensterBereiche)) {
 				m.setX(x);
 				m.setY(y);
-				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutOben(),
-						m.getY() - m.getKeepOutLinks(), m.getLaenge() + m.getKeepOutOben() + m.getKeepOutUnten(),
-						m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
-				System.out.println(
-						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
-				return true;
-			}
-		}
-		
-		// Untere Wand
-		while (m.getAusrichtung() != 180)
-			m.drehen();
-		
-		for (double x = startX + m.getKeepOutRechts(); x + m.getLaenge() + m.getKeepOutLinks() <= endX; x += 0.1) {
-			double y = raum.getY() + m.getKeepOutOben();
-			if (!kollidiert(raum, x, y, m)) {
-				m.setX(x);
-				m.setY(y);
-				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutRechts(),
-						m.getY() - m.getKeepOutOben(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 				System.out.println(
 						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
 				return true;
 			}
 		}
-		
+
+		// Untere Wand
+		while (m.getAusrichtung() != 180)
+			m.drehen();
+
+		for (double x = startX + m.getKeepOutRechts(); x + m.getLaenge() + m.getKeepOutLinks() <= endX; x += 0.1) {
+			double y = raum.getY() + m.getKeepOutOben();
+			if (!kollidiert(raum, x, y, m, blockierteBereiche, blockierteFensterBereiche)) {
+				m.setX(x);
+				m.setY(y);
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
+				System.out.println(
+						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+				return true;
+			}
+		}
+
 		// Rechte Wand
 		while (m.getAusrichtung() != 270)
 			m.drehen();
-		
+
 		for (double y = startY + m.getKeepOutRechts(); y + m.getBreite() + m.getKeepOutLinks() <= endY; y += 0.1) {
 			double x = raum.getX() + raum.getLaenge() - (m.getLaenge() + m.getKeepOutOben());
-			if (!kollidiert(raum, x, y, m)) {
+			if (!kollidiert(raum, x, y, m, blockierteBereiche, blockierteFensterBereiche)) {
 				m.setX(x);
 				m.setY(y);
-				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutUnten(),
-						m.getY() - m.getKeepOutRechts(), m.getLaenge() + m.getKeepOutUnten() + m.getKeepOutOben(),
-						m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 				System.out.println(
 						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
 				return true;
@@ -187,22 +219,22 @@ public class MoebelPlatzierer2 {
 		return false;
 	}
 
-	private static boolean platziereInEcke(RaumModell raum, Moebelstueck m) {
-		double[][] ecken = { { raum.getX(), raum.getY()+raum.getBreite() }, { raum.getX() , raum.getY() },
-				{ raum.getX()+raum.getLaenge(), raum.getY() },
+	private static boolean platziereInEcke(RaumModell raum, Moebelstueck m, List<BlockierterBereich> blockierteBereiche, List<BlockierterBereich> blockierteFenster) {
+		double[][] ecken = { { raum.getX(), raum.getY() + raum.getBreite() }, { raum.getX(), raum.getY() },
+				{ raum.getX() + raum.getLaenge(), raum.getY() },
 				{ raum.getX() + raum.getLaenge(), raum.getY() + raum.getBreite() } };
 
 		for (double[] ecke : ecken) {
-			if (pruefeUndPlatziereInEcke(raum, m, ecke[0], ecke[1])) {
+			if (pruefeUndPlatziereInEcke(raum, m, ecke[0], ecke[1], blockierteBereiche, blockierteFenster)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private static boolean pruefeUndPlatziereInEcke(RaumModell raum, Moebelstueck m, double x, double y) {
+	private static boolean pruefeUndPlatziereInEcke(RaumModell raum, Moebelstueck m, double x, double y, List<BlockierterBereich> blockierteBereiche, List<BlockierterBereich> blockierteFensterBereiche) {
 		boolean istLinkeEcke = (x == raum.getX());
-		boolean istObereEcke = (y == raum.getY()+raum.getBreite());
+		boolean istObereEcke = (y == raum.getY() + raum.getBreite());
 
 		// Prüfe, ob das Möbelstück in der Ecke platziert werden kann
 		if (istLinkeEcke) {
@@ -211,9 +243,9 @@ public class MoebelPlatzierer2 {
 				while (m.getAusrichtung() != 0)
 					m.drehen();
 				if (m.getKeepOutOben() == 0 && m.getKeepOutLinks() == 0) {
-					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - m.getKeepOutOben(), m)) {
+					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - (m.getKeepOutOben() + m.getBreite()), m, blockierteBereiche, blockierteFensterBereiche)) {
 						m.setX(x + m.getKeepOutLinks());
-						m.setY(y - m.getKeepOutOben());
+						m.setY(y - (m.getKeepOutOben() + m.getBreite()));
 						blockierteBereiche.add(
 								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
@@ -230,13 +262,13 @@ public class MoebelPlatzierer2 {
 					while (m.getAusrichtung() != 90) {
 						m.drehen();
 					}
-					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - m.getKeepOutOben(), m)) {
+					if (!kollidiert(raum, x + m.getKeepOutLinks(), y - (m.getKeepOutOben() + m.getBreite()), m, blockierteBereiche, blockierteFensterBereiche)) {
 						m.setX(x + m.getKeepOutLinks());
-						m.setY(y - m.getKeepOutOben());
+						m.setY(y - (m.getKeepOutOben() + m.getBreite()));
 						blockierteBereiche.add(
-								new BlockierterBereich(m.getX() - m.getKeepOutOben(), m.getY() - m.getKeepOutLinks(),
-										m.getLaenge() + m.getKeepOutOben() + m.getKeepOutUnten(),
-										m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
+										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 						System.out.println(
 								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
@@ -249,13 +281,13 @@ public class MoebelPlatzierer2 {
 				if (m.getKeepOutLinks() == 0 && m.getKeepOutOben() == 0) {
 					while (m.getAusrichtung() != 90)
 						m.drehen();
-					if (!kollidiert(raum, x + m.getKeepOutLinks(), y + m.getKeepOutUnten(), m)) {
+					if (!kollidiert(raum, x + m.getKeepOutLinks(), y + m.getKeepOutUnten(), m, blockierteBereiche, blockierteFensterBereiche)) {
 						m.setX(x + m.getKeepOutLinks());
 						m.setY(y + m.getKeepOutUnten());
 						blockierteBereiche.add(
-								new BlockierterBereich(m.getX() - m.getKeepOutOben(), m.getY() - m.getKeepOutLinks(),
-										m.getLaenge() + m.getKeepOutOben() + m.getKeepOutUnten(),
-										m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
+										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 						System.out.println(
 								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
@@ -267,11 +299,11 @@ public class MoebelPlatzierer2 {
 					while (m.getAusrichtung() != 180)
 						m.drehen();
 
-					if (!kollidiert(raum, x + m.getKeepOutLinks(), y + m.getKeepOutUnten(), m)) {
+					if (!kollidiert(raum, x + m.getKeepOutLinks(), y + m.getKeepOutUnten(), m, blockierteBereiche, blockierteFensterBereiche)) {
 						m.setX(x + m.getKeepOutLinks());
 						m.setY(y + m.getKeepOutUnten());
 						blockierteBereiche.add(
-								new BlockierterBereich(m.getX() - m.getKeepOutRechts(), m.getY() - m.getKeepOutOben(),
+								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 						System.out.println(
@@ -287,11 +319,11 @@ public class MoebelPlatzierer2 {
 				if (m.getKeepOutOben() == 0 && m.getKeepOutLinks() == 0) {
 					while (m.getAusrichtung() != 180)
 						m.drehen();
-					if (!kollidiert(raum, x - m.getKeepOutRechts(), y + m.getKeepOutUnten(), m)) {
-						m.setX(x - m.getKeepOutRechts());
+					if (!kollidiert(raum, x - (m.getKeepOutRechts() + m.getLaenge()), y + m.getKeepOutUnten(), m, blockierteBereiche, blockierteFensterBereiche)) {
+						m.setX(x - (m.getKeepOutRechts() + m.getLaenge()));
 						m.setY(y + m.getKeepOutUnten());
 						blockierteBereiche.add(
-								new BlockierterBereich(m.getX() - m.getKeepOutRechts(), m.getY() - m.getKeepOutOben(),
+								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 						System.out.println(
@@ -304,13 +336,13 @@ public class MoebelPlatzierer2 {
 
 						while (m.getAusrichtung() != 270)
 							m.drehen();
-						if (!kollidiert(raum, x - m.getKeepOutRechts(), y + m.getKeepOutUnten(), m)) {
-							m.setX(x - m.getKeepOutRechts());
+						if (!kollidiert(raum, x - (m.getKeepOutRechts() + m.getLaenge()), y + m.getKeepOutUnten(), m, blockierteBereiche, blockierteFensterBereiche)) {
+							m.setX(x - (m.getKeepOutRechts() + m.getLaenge()));
 							m.setY(y + m.getKeepOutUnten());
-							blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutUnten(),
-									m.getY() - m.getKeepOutRechts(),
-									m.getLaenge() + m.getKeepOutUnten() + m.getKeepOutOben(),
-									m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+							blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
+									m.getY() - m.getKeepOutUnten(),
+									m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+									m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
 									+ ", y=" + m.getY());
 							return true;
@@ -323,13 +355,14 @@ public class MoebelPlatzierer2 {
 				if (m.getKeepOutLinks() == 0 && m.getKeepOutOben() == 0) {
 					while (m.getAusrichtung() != 270)
 						m.drehen();
-					if (!kollidiert(raum, x - m.getKeepOutRechts(), y - m.getKeepOutOben(), m)) {
-						m.setX(x - m.getKeepOutRechts());
-						m.setY(y - m.getKeepOutOben());
+					if (!kollidiert(raum, x - (m.getKeepOutRechts() + m.getLaenge()),
+							y - (m.getKeepOutOben() + m.getBreite()), m, blockierteBereiche, blockierteFensterBereiche)) {
+						m.setX(x - (m.getKeepOutRechts() + m.getLaenge()));
+						m.setY(y - (m.getKeepOutOben() + m.getBreite()));
 						blockierteBereiche.add(
-								new BlockierterBereich(m.getX() - m.getKeepOutUnten(), m.getY() - m.getKeepOutRechts(),
-										m.getLaenge() + m.getKeepOutUnten() + m.getKeepOutOben(),
-										m.getBreite() + m.getKeepOutLinks() + m.getKeepOutRechts()));
+								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
+										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
+										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 						System.out.println(
 								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
@@ -340,11 +373,12 @@ public class MoebelPlatzierer2 {
 
 						while (m.getAusrichtung() != 0)
 							m.drehen();
-						if (!kollidiert(raum, x - m.getKeepOutRechts(), y - m.getKeepOutOben(), m)) {
-							m.setX(x - m.getKeepOutRechts());
-							m.setY(y - m.getKeepOutOben());
+						if (!kollidiert(raum, x - (m.getKeepOutRechts() + m.getLaenge()),
+								y - (m.getKeepOutOben() + m.getBreite()), m, blockierteBereiche, blockierteFensterBereiche)) {
+							m.setX(x - (m.getKeepOutRechts() + m.getLaenge()));
+							m.setY(y - (m.getKeepOutOben() + m.getBreite()));
 							blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
-									m.getY() - m.getKeepOutOben(),
+									m.getY() - m.getKeepOutUnten(),
 									m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 									m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
@@ -359,7 +393,7 @@ public class MoebelPlatzierer2 {
 	}
 
 	// Methode zum Überprüfen, ob ein Möbelstück mit einem belegten platz kollidiert
-	private static boolean kollidiert(RaumModell raum, double x, double y, Moebelstueck m) {
+	private static boolean kollidiert(RaumModell raum, double x, double y, Moebelstueck m, List<BlockierterBereich> blockierteBereiche, List<BlockierterBereich> blockierteFensterBereiche) {
 		boolean kollidiert = false;
 		for (BlockierterBereich bereich : blockierteBereiche) {
 			if (bereich.y + bereich.breite <= y - m.getKeepOutUnten()// liegen die Bereiche vollständig übereinander?
@@ -404,7 +438,7 @@ public class MoebelPlatzierer2 {
 		return false;
 	}
 
-	private static void blockiereTuerbereiche(RaumModell raum) {
+	private static void blockiereTuerbereiche(RaumModell raum, List<BlockierterBereich> blockierteBereiche) {
 		for (TuerModell tuer : raum.getTueren()) {
 			double x = tuer.getX();
 			double y = tuer.getY();
@@ -423,7 +457,7 @@ public class MoebelPlatzierer2 {
 		}
 	}
 
-	private static void blockiereFensterbereiche(RaumModell raum) {
+	private static void blockiereFensterbereiche(RaumModell raum, List<BlockierterBereich> blockierteFensterBereiche) {
 		for (Fenster fenster : raum.getFenster()) {
 			double x = fenster.getX();
 			double y = fenster.getY();
