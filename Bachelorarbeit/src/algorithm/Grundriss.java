@@ -95,6 +95,7 @@ public class Grundriss {
 					tueren.add(
 							new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
 				}
+				
 //				flur.addTuer(new Tuer(null, flur, 0.92));
 				raeume.add(new RaumModell(flur.getName(), flur.getLaenge(), flur.getBreite(), flur.getMoebel(),
 						tueren, 0, 0));
@@ -267,7 +268,7 @@ public class Grundriss {
 		verarbeiteRaeume(raeumeLinks, true);
 		verarbeiteRaeume(raeumeRechts, false);
 
-		platziereFlurTuer();
+		platziereEingangsTuer();
 
 	}
 
@@ -287,18 +288,18 @@ public class Grundriss {
 	// Platziert die Tür für den Flur
 	private void platziereFlurTuer(RaumModell raum, TuerModell tuer, boolean istLinks) {
 
-		if (raum.getBreite() > 1.12) {
+		if (raum.getBreite() > 2) {
 			double random = Math.random();
 			if (random < 0.5) {
 				tuer.setX(raum.getX() + (istLinks ? raum.getLaenge() : 0));
-				tuer.setY(raum.getY() + 0.1);
+				tuer.setY(raum.getY() + 0.08);
 				tuer.setHorizontal(false);
 				tuer.setLinksOeffnend(false);
 
 				
 			} else {
 				tuer.setX(raum.getX() + (istLinks ? raum.getLaenge() : 0));
-				tuer.setY(raum.getY() + raum.getBreite() - (0.1 + tuer.getBreite()));
+				tuer.setY(raum.getY() + raum.getBreite() - (0.08 + tuer.getBreite()));
 				tuer.setHorizontal(false);
 				tuer.setLinksOeffnend(true);
 
@@ -336,13 +337,13 @@ public class Grundriss {
 //	            tuer.setLinksOeffnend(!vonRaumUeberInRaum);
 
 			tuer.setX(
-					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+					istLinks ? vonRaum.getX() + 0.08 : vonRaum.getX() + vonRaum.getLaenge() - (0.08 + tuer.getBreite()));
 			tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
 			tuer.setHorizontal(true);
 			tuer.setLinksOeffnend(vonRaumUeberInRaum);
 
 			vonRaumTuer.setX(
-					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+					istLinks ? vonRaum.getX() + 0.08 : vonRaum.getX() + vonRaum.getLaenge() - (0.08 + tuer.getBreite()));
 			vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
 			vonRaumTuer.setHorizontal(true);
 			vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
@@ -350,26 +351,26 @@ public class Grundriss {
 
 		case 1: // inRaum länger als vonRaum
 			tuer.setX(
-					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+					istLinks ? vonRaum.getX() + 0.08 : vonRaum.getX() + vonRaum.getLaenge() - (0.08 + tuer.getBreite()));
 			tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
 			tuer.setHorizontal(true);
 			tuer.setLinksOeffnend(vonRaumUeberInRaum);
 
 			vonRaumTuer.setX(
-					istLinks ? vonRaum.getX() + 0.1 : vonRaum.getX() + vonRaum.getLaenge() - (0.1 + tuer.getBreite()));
+					istLinks ? vonRaum.getX() + 0.08 : vonRaum.getX() + vonRaum.getLaenge() - (0.08 + tuer.getBreite()));
 			vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
 			vonRaumTuer.setHorizontal(true);
 			vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
 			break;
 
 		case -1: // vonRaum länger als inRaum
-			tuer.setX(istLinks ? inRaum.getX() + 0.1 : inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+			tuer.setX(istLinks ? inRaum.getX() + 0.08 : inRaum.getX() + inRaum.getLaenge() - (0.08 + tuer.getBreite()));
 			tuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
 			tuer.setHorizontal(true);
 			tuer.setLinksOeffnend(vonRaumUeberInRaum);
 
 			vonRaumTuer.setX(
-					istLinks ? inRaum.getX() + 0.1 : inRaum.getX() + inRaum.getLaenge() - (0.1 + tuer.getBreite()));
+					istLinks ? inRaum.getX() + 0.08 : inRaum.getX() + inRaum.getLaenge() - (0.08 + tuer.getBreite()));
 			vonRaumTuer.setY(vonRaumUeberInRaum ? vonRaum.getY() : inRaum.getY());
 			vonRaumTuer.setHorizontal(true);
 			vonRaumTuer.setLinksOeffnend(vonRaumUeberInRaum);
@@ -378,12 +379,12 @@ public class Grundriss {
 	}
 
 	// Platziert Eingangstür zum Flur
-	private void platziereFlurTuer() {
+	private void platziereEingangsTuer() {
 		RaumModell flur = raeume.get(0);
 		TuerModell flurTuer = findeEingangsTuer(flur.getTueren());
 
 		if (flurTuer != null) {
-			flurTuer.setX((flur.getBreite() - flurTuer.getBreite()) / 2);
+			flurTuer.setX((flur.getX()+flur.getLaenge() - flurTuer.getBreite()) / 2);
 			flurTuer.setY(flur.getY());
 			flurTuer.setHorizontal(true);
 			flurTuer.setLinksOeffnend(true);

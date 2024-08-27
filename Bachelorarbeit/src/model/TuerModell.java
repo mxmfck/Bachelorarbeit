@@ -17,6 +17,13 @@ public class TuerModell implements Cloneable{
 		this.breite = breite;
 	}
 	
+	public TuerModell(Raum vonRaum, Raum inRaum, double breite, boolean horizontal) {
+		this.vonRaum = vonRaum;
+		this.inRaum = inRaum;
+		this.breite = breite;
+		this.horizontal = horizontal;
+	}
+	
 //	 @Override
 //	    public Object clone() throws CloneNotSupportedException {
 //	        Tuer clonedTuer = (Tuer) super.clone();

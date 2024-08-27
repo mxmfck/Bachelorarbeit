@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+
 import algorithm.Grundriss;
 import algorithm.GrundrissEvaluator;
-import algorithm.MoebelPlatzierer2;
+import algorithm.MoebelPlatzierer;
 import model.raeume.Flur;
 import parser.FileParser;
+import visualization.GrundrissPanel;
 
 /*Klasse in der alle Räume und Türen gespeichert werden
  *Basierend auf dieser Klasse kann der Grundriss eines Hauses erstellt werden
@@ -52,9 +56,17 @@ public class Haus implements Cloneable{
 																				// des Hauses
 //		SpiralBasedGrundriss spiralBasedGrundriss = new SpiralBasedGrundriss(this); // Erstellung eines Grundrisses auf
 		// Basis des Hauses
-		MoebelPlatzierer2.einrichten(grundriss);// Platzierung der Möbel im Raum
+		MoebelPlatzierer.einrichten(grundriss);// Platzierung der Möbel im Raum
 
-		System.out.println("test");
+		// GrundrissPanel erstellen und mit der Liste der RaumModelle initialisieren
+        GrundrissPanel grundrissPanel = new GrundrissPanel(grundriss);
+
+        // Swing-Komponenten initialisieren
+        JFrame frame = new JFrame("Grundriss Visualisierung");
+        frame.add(new JScrollPane(grundrissPanel));
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
 
 	}
 

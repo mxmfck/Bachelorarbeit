@@ -1,7 +1,7 @@
 Wohnzimmer:
   Maße: 5x6
   Möbel:
-    Sofa: 2x1,5
+    Sofa: 3x1,5
         Keepout: 1,5
     Schrank: 3x0.5
         Keepout: 0;0;0;1
