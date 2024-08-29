@@ -75,11 +75,11 @@ public abstract class Moebelstueck {
 	
 	// Setter für die Position des Möbelstücks
 	public void setX(double x) {
-		this.x = x;
+		this.x = Math.round(x*100.0)/100.0;
 	}
 	
 	public void setY(double y) {
-		this.y = y;
+		this.y = Math.round(y*100.0)/100.0;
 	}
 	
 	public void drehen() {

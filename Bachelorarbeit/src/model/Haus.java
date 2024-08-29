@@ -18,23 +18,13 @@ import visualization.GrundrissPanel;
  *Basierend auf dieser Klasse kann der Grundriss eines Hauses erstellt werden
  * */
 
-public class Haus implements Cloneable{
+public class Haus{
 
 	private List<Raum> raeume; // Speichert alle Räume des Hauses
 	private Raum flur; // Speichert den Flur des Hauses (wird zu einem späterem Zeitpunkt variabel
 						// generiert)
 	private List<Tuer> tueren;
 
-//	@Override
-//    public Object clone() throws CloneNotSupportedException {
-//		Haus clonedHaus = (Haus) super.clone();
-//        clonedHaus.tueren = new ArrayList<>(this.tueren);
-//        
-//        if (this.flur!=null){
-//        	clonedHaus.flur = (Raum) this.flur.clone();
-//        }
-//        return clonedHaus;
-//    }
 
 //	Übergabe des Pfades der Datei, die die Anforderungen enthält 
 	public Haus(String path) {
@@ -68,6 +58,7 @@ public class Haus implements Cloneable{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+        System.out.println("");
 	}
 
 	public List<Raum> getRaeume() { // Getter für die Liste der Räume
