@@ -156,7 +156,6 @@ public class GrundrissPanel extends JPanel {
 					int tuerX = offsetX + (int) ((tuer.getX()) * SCALE);
 					int tuerY = offsetY + (int) ((tuer.getY()) * SCALE);
 					int tuerBreite = (int) (tuer.getBreite() * SCALE);
-//											int tuerLaenge = 1;
 
 					g2d.setStroke(new BasicStroke(WALL_THICKNESS * 2 + 1)); // Setzt die Strichstärke für Türen auf 1
 																			// Pixel
@@ -165,17 +164,12 @@ public class GrundrissPanel extends JPanel {
 					if (!tuer.isHorizontal()) {
 						g2d.drawLine(tuerX, tuerY + WALL_THICKNESS, tuerX, tuerY + tuerBreite - WALL_THICKNESS);
 
-//						//Test
-//						g2d.setStroke(new BasicStroke(1)); // Setzt die Strichstärke für Türen auf 1 Pixel
-//						g2d.setColor(Color.RED);
-//						g2d.drawLine(tuerX, tuerY, tuerX, tuerY + tuerBreite);
 					} else {
 
 						g2d.drawLine(tuerX + WALL_THICKNESS, tuerY, tuerX + tuerBreite - WALL_THICKNESS, tuerY);
 					}
 
-//											g.setStroke(new BasicStroke(WALL_THICKNESS * 2)); // Setzt die Dicke der Wände
-//											g.drawRect(tuerX, tuerY, tuerBreite, tuerLaenge);
+					tuer.draw(g2d, raum, offsetX, offsetY, SCALE);
 				}
 			}
 		}
