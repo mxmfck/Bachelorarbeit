@@ -48,6 +48,13 @@ public class Schreibtisch extends Moebelstueck {
 			Rectangle2D.Double stuhl = new Rectangle2D.Double(stuhlX, stuhlY, stuhlLaenge, 0.4 * SCALE);
 			g2d.setColor(Color.BLACK);
 			g2d.draw(stuhl);
+			
+			double sitzLaenge = stuhlLaenge *0.8;
+			double sitzBreite = (0.4 * SCALE)*0.9;
+			double sitzX = stuhlX + (stuhlLaenge - sitzLaenge) / 2;
+			double sitzY = stuhlY + (0.4 * SCALE - sitzBreite) / 2;
+			Rectangle2D.Double sitz = new Rectangle2D.Double(sitzX, sitzY, sitzLaenge, sitzBreite);
+			g2d.draw(sitz);
 
 		} else if (this.getAusrichtung() == 180) {
 			double stuhlLaenge = schreibtischstuhl.getLaenge() * SCALE;
