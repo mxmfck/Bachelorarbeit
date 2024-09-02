@@ -1,5 +1,9 @@
 package model;
 
+import java.awt.Graphics2D;
+
+import algorithm.RaumModell;
+
 public abstract class Moebelstueck {
 // 	Abstrakte Klasse für alle Möbelstücke
 
@@ -94,6 +98,8 @@ public abstract class Moebelstueck {
 		keepOutUnten = tmp2;
 		ausrichtung = (ausrichtung+90)%360; 
 	}
+	
+	public abstract void draw(Graphics2D g2d, RaumModell raum, int offsetX, int offsetY, int SCALE);
 
 	public String toString() {
 		return " Möbelstück: " + this.getClass().getSimpleName() + " | Länge: " + laenge + " | Breite: " + breite

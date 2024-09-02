@@ -82,17 +82,23 @@ public class GrundrissPanel extends JPanel {
 			// Zeichne die Möbel im Raum
 			if (raum.getMoebel() != null) {
 				for (Moebelstueck moebel : raum.getMoebel()) {
-					int moebelX = offsetX + (int) ((moebel.getX()) * SCALE);
-					int moebelY = offsetY + (int) ((moebel.getY()) * SCALE);
-					int moebelLaenge = (int) (moebel.getBreite() * SCALE);
-					int moebelBreite = (int) (moebel.getLaenge() * SCALE);
+//					int moebelX = offsetX + (int) ((moebel.getX()) * SCALE);
+//					int moebelY = offsetY + (int) ((moebel.getY()) * SCALE);
+//					int moebelLaenge = (int) (moebel.getBreite() * SCALE);
+//					int moebelBreite = (int) (moebel.getLaenge() * SCALE);
+//
+//					g2d.setStroke(new BasicStroke(1));
+//					g2d.setColor(Color.LIGHT_GRAY);
+//					g2d.fillRect(moebelX, moebelY, moebelBreite, moebelLaenge);
+//					g2d.setColor(Color.BLACK);
+//					g2d.drawRect(moebelX, moebelY, moebelBreite, moebelLaenge);
+//					g2d.drawString(moebel.getClass().getSimpleName(), moebelX + 5, moebelY + 15);
 
-					g2d.setStroke(new BasicStroke(1));
-					g2d.setColor(Color.LIGHT_GRAY);
-					g2d.fillRect(moebelX, moebelY, moebelBreite, moebelLaenge);
-					g2d.setColor(Color.BLACK);
-					g2d.drawRect(moebelX, moebelY, moebelBreite, moebelLaenge);
-					g2d.drawString(moebel.getClass().getSimpleName(), moebelX + 5, moebelY + 15);
+					try {
+						moebel.draw(g2d, raum, offsetX, offsetY, SCALE);
+					} catch (Exception e) {
+						System.out.println();
+					}
 				}
 			}
 

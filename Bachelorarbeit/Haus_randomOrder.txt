@@ -58,7 +58,7 @@ Badezimmer:
   Möbel:
     Waschbecken: 1.5x1
     	Keepout: 0;0;0;1
-    Toilette: 1x1
+    Dusche: 1x1
         Keepout: 0;0;0;1
     Badewanne: 2x1
         Keepout: 0;0;0;1

@@ -1,6 +1,6 @@
 package model;
 
-public class Tuer implements Cloneable{
+public class Tuer{
 //	Klasse für Türen
 
 	private Raum vonRaum; //Raum, von dem die Tür ausgeht

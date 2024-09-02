@@ -1,7 +1,9 @@
 package model.moebel;
 
+import java.awt.Graphics2D;
 import java.util.List;
 
+import algorithm.RaumModell;
 import model.Moebelstueck;
 
 public class Tisch extends Moebelstueck {
@@ -87,4 +89,7 @@ public class Tisch extends Moebelstueck {
 		return result;
 	}
 
+public void draw(Graphics2D g2d, RaumModell raum, int offsetX, int offsetY, int SCALE) {
+		
+	}
 }
