@@ -50,6 +50,8 @@ Schlafzimmer 2:
         Keepout: 0;0;0;1
     Schreibtisch: 1.5x0.5
         Keepout: 0;0;0;1
+    Stuhl: 0.5x0.5
+        Keepout: 0;0;0;1
 
 Badezimmer:
   Maße: 4x5
@@ -67,8 +69,8 @@ Badezimmer:
 WC:
   Maße: 3x2
   Möbel:
-    Toilette: 1x1
-        Keepout: 0;0;0;0,5
+    Toilette: 0.4x0.7
+        Keepout: 0,5;0,5;0;0,5
     Waschbecken: 0.5x0.5
         Keepout: 0;0;0;0,5
   Türen:

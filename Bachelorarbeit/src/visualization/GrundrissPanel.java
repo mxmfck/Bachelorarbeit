@@ -137,20 +137,29 @@ public class GrundrissPanel extends JPanel {
 			g2d.translate(0, -height);
 
 			// Berechne den Mittelpunkt des Raums
-			int centerX = wandX + wandLaenge / 2;
-			int centerY = wandY + wandBreite / 2;
+			int centerX = raumX + raumLaenge / 2;
+			int centerY = raumY + raumBreite / 2;
 
 			// Text für den Namen des Raumes und die Größe in m²
-			String raumText = raum.getName() + " - " + (raum.getRaumLaenge() * raum.getRaumBreite()) + " m²";
+			String raumText = raum.getName() + "\n" + (raum.getRaumLaenge() * raum.getRaumBreite()) + " m²";
 
 			// Bestimme die Breite des Textes, um ihn zu zentrieren
 			int textWidth = g2d.getFontMetrics().stringWidth(raumText);
 			int textHeight = g2d.getFontMetrics().getHeight();
 
-			// Zeichne den Text zentriert im Raum
+			// Versatz für die Umrandung
+			int outlineOffset = 1;
+
+			// Zeichne die Umrandung (schwarzer Text leicht versetzt in alle Richtungen)
+			g2d.setColor(Color.BLACK);
+			g2d.drawString(raumText, centerX - textWidth / 2 - outlineOffset, height - (centerY + textHeight / 4 - outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 + outlineOffset, height - (centerY + textHeight / 4 - outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 - outlineOffset, height - (centerY + textHeight / 4 + outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 + outlineOffset, height - (centerY + textHeight / 4 + outlineOffset));
+
+			// Zeichne den weißen Text zentriert im Raum
 			g2d.setColor(Color.WHITE);
 			g2d.drawString(raumText, centerX - textWidth / 2, height - (centerY + textHeight / 4));
-
 			// Ursprüngliche Transformation wiederherstellen
 			g2d.setTransform(originalTransform);
 		}

@@ -29,7 +29,7 @@ public class Schreibtisch extends Moebelstueck {
 		double moebelLaenge = this.getLaenge() * SCALE;
 		double moebelBreite = this.getBreite() * SCALE;
 
-		// Schrank zeichnen
+		// Schreibtisch zeichnen
 		Rectangle2D.Double rect = new Rectangle2D.Double(moebelX, moebelY, moebelLaenge, moebelBreite);
 
 		g2d.setStroke(new BasicStroke(1));
@@ -48,9 +48,9 @@ public class Schreibtisch extends Moebelstueck {
 			Rectangle2D.Double stuhl = new Rectangle2D.Double(stuhlX, stuhlY, stuhlLaenge, 0.4 * SCALE);
 			g2d.setColor(Color.BLACK);
 			g2d.draw(stuhl);
-			
-			double sitzLaenge = stuhlLaenge *0.8;
-			double sitzBreite = (0.4 * SCALE)*0.9;
+
+			double sitzLaenge = stuhlLaenge * 0.8;
+			double sitzBreite = (0.4 * SCALE) * 0.9;
 			double sitzX = stuhlX + (stuhlLaenge - sitzLaenge) / 2;
 			double sitzY = stuhlY + (0.4 * SCALE - sitzBreite) / 2;
 			Rectangle2D.Double sitz = new Rectangle2D.Double(sitzX, sitzY, sitzLaenge, sitzBreite);
@@ -65,6 +65,14 @@ public class Schreibtisch extends Moebelstueck {
 			g2d.setColor(Color.BLACK);
 			g2d.draw(stuhl);
 
+			double sitzLaenge = stuhlLaenge * 0.8;
+			double sitzBreite = (0.4 * SCALE) * 0.9;
+			double sitzX = stuhlX + (stuhlLaenge - sitzLaenge) / 2;
+			double sitzY = stuhlY;
+
+			Rectangle2D.Double sitz = new Rectangle2D.Double(sitzX, sitzY, sitzLaenge, sitzBreite);
+			g2d.draw(sitz);
+
 		} else if (this.getAusrichtung() == 90) {
 			double stuhlBreite = schreibtischstuhl.getBreite() * SCALE;
 			double stuhlX = moebelX + moebelLaenge;
@@ -73,7 +81,15 @@ public class Schreibtisch extends Moebelstueck {
 			Rectangle2D.Double stuhl = new Rectangle2D.Double(stuhlX, stuhlY, 0.4 * SCALE, stuhlBreite);
 			g2d.setColor(Color.BLACK);
 			g2d.draw(stuhl);
-		
+
+			double sitzLaenge = (0.4 * SCALE) * 0.9;
+			double sitzBreite = stuhlBreite * 0.8;
+			double sitzX = stuhlX;
+			double sitzY = stuhlY + (stuhlBreite - sitzBreite) / 2;
+
+			Rectangle2D.Double sitz = new Rectangle2D.Double(sitzX, sitzY, sitzLaenge, sitzBreite);
+			g2d.draw(sitz);
+
 		} else if (this.getAusrichtung() == 270) {
 			double stuhlBreite = schreibtischstuhl.getBreite() * SCALE;
 			double stuhlX = moebelX - 0.4 * SCALE;
@@ -82,6 +98,14 @@ public class Schreibtisch extends Moebelstueck {
 			Rectangle2D.Double stuhl = new Rectangle2D.Double(stuhlX, stuhlY, 0.4 * SCALE, stuhlBreite);
 			g2d.setColor(Color.BLACK);
 			g2d.draw(stuhl);
+
+			double sitzLaenge = (0.4 * SCALE) * 0.9;
+			double sitzBreite = stuhlBreite * 0.8;
+			double sitzX = stuhlX + (0.4 * SCALE - sitzLaenge);
+			double sitzY = stuhlY + (stuhlBreite - sitzBreite) / 2;
+
+			Rectangle2D.Double sitz = new Rectangle2D.Double(sitzX, sitzY, sitzLaenge, sitzBreite);
+			g2d.draw(sitz);
 		}
 	}
 }
