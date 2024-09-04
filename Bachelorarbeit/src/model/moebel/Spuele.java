@@ -13,8 +13,15 @@ import model.Moebelstueck;
 public class Spuele extends Moebelstueck {
 
 	public Spuele(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
-			double keepOutUnten) {
+			double keepOutUnten,boolean keepoutGesetzt) {
 		super(laenge, breite, keepOutLinks, keepOutRechts, keepOutOben, keepOutUnten);
+		
+		if (!keepoutGesetzt) {
+			this.setKeepOutLinks(0);
+			this.setKeepOutRechts(0);
+			this.setKeepOutOben(0);
+			this.setKeepOutUnten(1);
+		}
 	}
 
 	public void draw(Graphics2D g2d, RaumModell raum, int offsetX, int offsetY, int SCALE) {

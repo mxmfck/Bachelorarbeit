@@ -12,8 +12,15 @@ import model.Moebelstueck;
 public class Sofa extends Moebelstueck {
 
 	public Sofa(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
-			double keepOutUnten) {
+			double keepOutUnten, boolean keepoutGesetzt) {
 		super(laenge, breite, keepOutLinks, keepOutRechts, keepOutOben, keepOutUnten);
+		
+		if (!keepoutGesetzt) {
+			this.setKeepOutLinks(0.5);
+			this.setKeepOutRechts(0.5);
+			this.setKeepOutOben(0);
+			this.setKeepOutUnten(1);
+		}
 	}
 
 	public void draw(Graphics2D g2d, RaumModell raum, int offsetX, int offsetY, int SCALE) {
@@ -90,8 +97,8 @@ public class Sofa extends Moebelstueck {
 					moebelY + 0.1 * moebelBreite);
 			Line2D.Double linieOben = new Line2D.Double(moebelX, moebelY + 0.9 * moebelBreite, moebelX + moebelLaenge,
 					moebelY + 0.9 * moebelBreite);
-			Line2D.Double sitz = new Line2D.Double(moebelX + 0.2 * moebelLaenge, moebelY + moebelBreite / 2,
-					moebelX + 0.9 * moebelLaenge, moebelY + moebelBreite / 2);
+			Line2D.Double sitz = new Line2D.Double(moebelX + 0.1 * moebelLaenge, moebelY + moebelBreite / 2,
+					moebelX + 0.8 * moebelLaenge, moebelY + moebelBreite / 2);
 
 			g2d.setColor(Color.BLACK);
 			g2d.draw(linieRechts);

@@ -12,8 +12,10 @@ Wohnzimmer:
 
 Küche:
   Möbel:
-    Kühlschrank: 1x1
-    	Keepout: 0;0;0;1
+    Tisch: 1x1
+    	Keepout: 1;1;0;1
+    	Stühle: 3
+        Position: u,l,r
     Ofen: 1x1
         Keepout: 0;0;0;1
     Herd: 1x1
@@ -25,7 +27,7 @@ Küche:
   Türen:
     Wohnzimmer
     Flur
-  Maße: 4x6
+  Maße: 5x7
 
 Schlafzimmer 1:
   Türen:

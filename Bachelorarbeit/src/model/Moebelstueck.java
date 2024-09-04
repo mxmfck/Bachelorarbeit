@@ -21,6 +21,7 @@ public abstract class Moebelstueck {
 
 	public Moebelstueck(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
 			double keepOutUnten) {
+		
 		this.laenge = laenge;
 		this.breite = breite;
 		this.keepOutLinks = keepOutLinks;
@@ -29,6 +30,8 @@ public abstract class Moebelstueck {
 		this.keepOutUnten = keepOutUnten;
 		ausrichtung=0;
 	}
+	
+	
 	
 //	@Override
 //    public Object clone() throws CloneNotSupportedException {
@@ -85,6 +88,23 @@ public abstract class Moebelstueck {
 	public void setY(double y) {
 		this.y = Math.round(y*100.0)/100.0;
 	}
+	
+	public void setKeepOutLinks(double keepOutLinks) {
+		this.keepOutLinks = keepOutLinks;
+	}
+	
+	public void setKeepOutRechts(double keepOutRechts) {
+		this.keepOutRechts = keepOutRechts;
+	}
+	
+	public void setKeepOutOben(double keepOutOben) {
+		this.keepOutOben = keepOutOben;
+	}
+	
+	public void setKeepOutUnten(double keepOutUnten) {
+		this.keepOutUnten = keepOutUnten;
+	}
+	
 	
 	public void drehen() {
 		double tmp = breite;

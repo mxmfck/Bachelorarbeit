@@ -13,9 +13,15 @@ public class Arbeitsplatte extends Moebelstueck {
 	// Klasse für Arbeitsplatten
 
 	public Arbeitsplatte(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
-			double keepOutUnten) {
+			double keepOutUnten, boolean keepoutGesetzt) {
+
 		super(laenge, breite, keepOutLinks, keepOutRechts, keepOutOben, keepOutUnten); // Konstruktor der Superklasse
-																						// aufrufen
+		if (!keepoutGesetzt) {
+			this.setKeepOutLinks(0);
+			this.setKeepOutRechts(0);
+			this.setKeepOutOben(0);
+			this.setKeepOutUnten(1);
+		}
 	}
 
 	public void draw(Graphics2D g2d, RaumModell raum, int offsetX, int offsetY, int SCALE) {
@@ -41,23 +47,23 @@ public class Arbeitsplatte extends Moebelstueck {
 			line = new Line2D.Double(moebelX + moebelLaenge * 0.1, moebelY + moebelBreite / 4,
 					moebelX + moebelLaenge * 0.9, moebelY + moebelBreite / 4);
 			g2d.draw(line);
-			
+
 			line = new Line2D.Double(moebelX + moebelLaenge * 0.1, moebelY + moebelBreite * 3 / 4,
 					moebelX + moebelLaenge * 0.9, moebelY + moebelBreite * 3 / 4);
 			g2d.draw(line);
-		}else {
+		} else {
 			Line2D.Double line = new Line2D.Double(moebelX + moebelLaenge / 2, moebelY + moebelBreite * 0.1,
 					moebelX + moebelLaenge / 2, moebelY + moebelBreite * 0.9);
 			g2d.draw(line);
-			
+
 			line = new Line2D.Double(moebelX + moebelLaenge / 4, moebelY + moebelBreite * 0.1,
 					moebelX + moebelLaenge / 4, moebelY + moebelBreite * 0.9);
 			g2d.draw(line);
-			
+
 			line = new Line2D.Double(moebelX + moebelLaenge * 3 / 4, moebelY + moebelBreite * 0.1,
 					moebelX + moebelLaenge * 3 / 4, moebelY + moebelBreite * 0.9);
 			g2d.draw(line);
-			
+
 		}
 	}
 }

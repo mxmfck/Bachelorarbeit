@@ -12,8 +12,15 @@ import model.Moebelstueck;
 public class Sessel extends Moebelstueck {
 
 	public Sessel(double laenge, double breite, double keepOutLinks, double keepOutRechts, double keepOutOben,
-			double keepOutUnten) {
+			double keepOutUnten, boolean keepoutGesetzt) {
 		super(laenge, breite, keepOutLinks, keepOutRechts, keepOutOben, keepOutUnten);
+		
+		if (!keepoutGesetzt) {
+			this.setKeepOutLinks(0.5);
+			this.setKeepOutRechts(0.5);
+			this.setKeepOutOben(0.5);
+			this.setKeepOutUnten(0.5);
+		}
 	}
 
 	public void draw(Graphics2D g2d, RaumModell raum, int offsetX, int offsetY, int SCALE) {

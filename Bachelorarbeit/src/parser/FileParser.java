@@ -40,30 +40,40 @@ import model.raeume.Wohnzimmer;
 public class FileParser {
 
 	public static Haus parseHaus(String path, Haus haus) throws IOException {
-		try (BufferedReader reader = new BufferedReader(new FileReader(path))) { //try with resource Statement für das automatische Schließen des Readers
-			String line; //Speichert die aktuelle Zeile des Readers
-			Raum aktuellerRaum = null; //Speichert den aktuellen Raum
-			List<TmpTuere> aktuelleTueren = new ArrayList<>(); //Speichert die Türen des aktuellen Raums (TmpTüren, da die Raume noch nicht initialisiert sein können)
+		try (BufferedReader reader = new BufferedReader(new FileReader(path))) { // try with resource Statement für das
+																					// automatische Schließen des
+																					// Readers
+			String line; // Speichert die aktuelle Zeile des Readers
+			Raum aktuellerRaum = null; // Speichert den aktuellen Raum
+			List<TmpTuere> aktuelleTueren = new ArrayList<>(); // Speichert die Türen des aktuellen Raums (TmpTüren, da
+																// die Raume noch nicht initialisiert sein können)
 
 			while ((line = reader.readLine()) != null) {
-				line = line.trim(); //Entfernt Leerzeichen am Anfang und Ende der Zeile
-				if (line.endsWith(":")) { //Wenn die Zeile mit einem Doppelpunkt endet, wird ein neuer Raum erstellt
+				line = line.trim(); // Entfernt Leerzeichen am Anfang und Ende der Zeile
+				if (line.endsWith(":")) { // Wenn die Zeile mit einem Doppelpunkt endet, wird ein neuer Raum erstellt
 //					if (aktuellerRaum != null) {
 //						haus.addRaum(aktuellerRaum);
 //					}
-					String raumName = line.substring(0, line.length() - 1); //Speichert den Namen des Raumes
-					aktuellerRaum = createRaum(reader, raumName, aktuelleTueren); //Erstellt den Raum
+					String raumName = line.substring(0, line.length() - 1); // Speichert den Namen des Raumes
+					aktuellerRaum = createRaum(reader, raumName, aktuelleTueren); // Erstellt den Raum
 					if (aktuellerRaum != null) {
-						haus.addRaum(aktuellerRaum); //Fügt den Raum dem Haus hinzu
+						for(Raum r: haus.getRaeume()) {
+							if (r.getName().equals(aktuellerRaum.getName())) {
+								System.err.println("Doppelter Raum: " + aktuellerRaum.getName());
+								System.exit(1);
+							}
+						}
+						haus.addRaum(aktuellerRaum); // Fügt den Raum dem Haus hinzu
 					}
 				}
 			}
-			addTuerenToHaus(haus, aktuelleTueren); //Transformiert TmpTuere in Tuer und fügt sie dem Haus hin
+			addTuerenToHaus(haus, aktuelleTueren); // Transformiert TmpTuere in Tuer und fügt sie dem Haus hin
 		}
 		return haus;
 	}
 
-	//Erstellt einen Raum anhand der Anforderungen in der Datei | Übergabe des Readers, des Raumnamens und der Türen des Raums
+	// Erstellt einen Raum anhand der Anforderungen in der Datei | Übergabe des
+	// Readers, des Raumnamens und der Türen des Raums
 	private static Raum createRaum(BufferedReader reader, String raumName, List<TmpTuere> aktuelleTueren)
 			throws IOException {
 		Raum raum = null;
@@ -73,13 +83,14 @@ public class FileParser {
 		List<Moebelstueck> moebel = new ArrayList<>();
 
 		String line;
-		while ((line = reader.readLine()) != null) { //removed && line !="" //ReadLine solange bis das Ende der Datei erreicht ist oder eine freie Zeile erreicht wird
+		while ((line = reader.readLine()) != null) { // removed && line !="" //ReadLine solange bis das Ende der Datei
+														// erreicht ist oder eine freie Zeile erreicht wird
 			line = line.trim();
 			if (line.isEmpty()) { // removed || line.endsWith(":")
 //				reader.reset();
-				break;  					    // removed Works?
+				break; // removed Works?
 			}
-			switch (line.split(":")[0]) { //Switch-Case für die verschiedenen Anforderungen
+			switch (line.split(":")[0]) { // Switch-Case für die verschiedenen Anforderungen
 			case "Größe":
 				groesse = Double.parseDouble(line.split(":")[1].trim().replace(',', '.'));
 				break;
@@ -88,14 +99,20 @@ public class FileParser {
 				breite = Double.parseDouble(line.split("x")[1].trim().replace(',', '.'));
 				break;
 			case "Möbel":
-				parseMoebel(reader, moebel); //Erstellt die Möbelstücke des Raumes
+				parseMoebel(reader, moebel); // Erstellt die Möbelstücke des Raumes
 				break;
 			case "Türen":
-				parseTueren(reader, raumName, aktuelleTueren); //Erstellen der Türen des Raumes
-				break;
+				try {
+					parseTueren(reader, raumName, aktuelleTueren); // Erstellen der Türen des Raumes
+					break;
+				} catch (Exception e) {
+					System.err.println("Zu viele Türen in Raum " + raumName);
+					System.exit(1);
+				}
 			}
 		}
-		//Erstellen des Raumes anhand des Raumnamens | startsWith, da es möglicherweise mehrere Räume des gleichen Typs gibt (z.B. Kinderzimmer1, Kinderzimmer2, ...)
+		// Erstellen des Raumes anhand des Raumnamens | startsWith, da es möglicherweise
+		// mehrere Räume des gleichen Typs gibt (z.B. Kinderzimmer1, Kinderzimmer2, ...)
 		if (raumName.startsWith("Wohnzimmer")) {
 			raum = new Wohnzimmer(raumName, laenge, breite, moebel, null);
 		} else if (raumName.startsWith("Badezimmer")) {
@@ -116,11 +133,23 @@ public class FileParser {
 			raum = new Kueche(raumName, laenge, breite, moebel, null);
 		} else {
 			System.err.println("Unbekannter Raum: " + raumName);
+			System.exit(1);
+		}
+
+		double moebelFlaeche = 0;
+		for (Moebelstueck m : moebel) {
+			moebelFlaeche += (m.getKeepOutLinks() + m.getKeepOutRechts() + m.getLaenge())
+					* (m.getKeepOutOben() + m.getKeepOutUnten() + m.getBreite());
+		}
+		if (moebelFlaeche > laenge * breite) {
+			System.err.println("Möbel nehmen mehr Platz ein als vorhanden");
+			System.exit(1);
 		}
 		return raum;
 	}
 
-	//Erstellt die Möbelstücke des Raumes | Übergabe des Readers und der Liste der Möbelstücke
+	// Erstellt die Möbelstücke des Raumes | Übergabe des Readers und der Liste der
+	// Möbelstücke
 	private static void parseMoebel(BufferedReader reader, List<Moebelstueck> moebel) throws IOException {
 		String line;
 		while ((line = reader.readLine()) != null && !line.endsWith(":") && !line.isEmpty()) { //
@@ -132,12 +161,15 @@ public class FileParser {
 			double laenge = Double.parseDouble(line.split(":")[1].split("x")[0].trim().replace(',', '.'));
 			double breite = Double.parseDouble(line.split(":")[1].split("x")[1].trim().replace(',', '.'));
 			double keepoutLinks = 0, keepoutRechts = 0, keepoutOben = 0, keepoutUnten = 0;
+			boolean keepoutGesetzt = false;
 			String keepoutLine;
 
 			reader.mark(1000);
 			keepoutLine = reader.readLine().trim();
-			if (keepoutLine.startsWith("Keepout")) { //Wenn eine Keepout-Anforderung existiert, werden die Werte gespeichert | Alternativ default Werte (TODO)
+			if (keepoutLine.startsWith("Keepout")) { // Wenn eine Keepout-Anforderung existiert, werden die Werte
+														// gespeichert | Alternativ default Werte (TODO)
 				String[] keepoutValues = keepoutLine.split(":")[1].split(";");
+				keepoutGesetzt = true;
 
 				if (keepoutValues.length == 4) {
 					keepoutLinks = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
@@ -160,35 +192,49 @@ public class FileParser {
 				reader.reset();
 			}
 
-			//Erstellen des Möbelstücks anhand des Möbelnamens | startsWith, da es möglicherweise mehrere Möbelstücke des gleichen Typs gibt (z.B. Bett1, Bett)
+			// Erstellen des Möbelstücks anhand des Möbelnamens | startsWith, da es
+			// möglicherweise mehrere Möbelstücke des gleichen Typs gibt (z.B. Bett1, Bett)
 			if (line.startsWith("Sofa")) {
-				moebel.add(new Sofa(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Sofa(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Schrank")) {
-				moebel.add(new Schrank(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Schrank(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Badewanne")) {
-				moebel.add(new Badewanne(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Badewanne(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Bett")) {
-				moebel.add(new Bett(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Bett(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Dusche")) {
-				moebel.add(new Dusche(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Dusche(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Herd")) {
-				moebel.add(new Herd(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Herd(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Kommode")) {
-				moebel.add(new Kommode(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Kommode(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Nachttisch")) {
 				moebel.add(new Nachttisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
 			} else if (line.startsWith("Sessel")) {
-				moebel.add(new Sessel(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Sessel(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Spüle")) {
-				moebel.add(new Spuele(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Spuele(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Kühlschrank")) {
-				moebel.add(new Kuehlschrank(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Kuehlschrank(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Ofen")) {
-				moebel.add(new Ofen(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Ofen(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Schreibtisch")) {
-				moebel.add(new Schreibtisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Schreibtisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Arbeitsplatte")) {
-				moebel.add(new Arbeitsplatte(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Arbeitsplatte(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Stuhl")) {
 				moebel.add(new Stuhl(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
 			} else if (line.startsWith("Tisch")) {
@@ -208,11 +254,17 @@ public class FileParser {
 					case "Stühle":
 						anzahlStuehle = Integer.parseInt(additionalInfo.split(":")[1].trim());
 						for (int i = 0; i < anzahlStuehle; i++) {
-							stuehle.add(new Stuhl(0.6, 0.6, 0.2, 0.5, 0.2, 0.1)); // TODO Werte
+							stuehle.add(new Stuhl(0.5, 0.5, 0, 0, 0, 0)); // TODO Werte
 						}
 						break;
 
 					case "Position":
+
+						if (!additionalInfo.split(":")[1].matches("[oulr,]*")) {
+							throw new IllegalArgumentException(
+									"Ungültige Zeichen in der Positionsangabe. Erlaubt sind nur o, u, l, r und ,.");
+						}
+
 						if (additionalInfo.split(":")[1].contains("o")) {
 							stuehleOben = true;
 						}
@@ -232,39 +284,49 @@ public class FileParser {
 					}
 					reader.mark(1000);
 				} while ((additionalInfo = reader.readLine()) != null && !additionalInfo.endsWith(":")
-						&& additionalInfo != "");
+						&& additionalInfo != "" && (additionalInfo.contains("Keepout")
+								|| additionalInfo.contains("Stühle") || additionalInfo.contains("Position")));
 				reader.reset();
 
-				moebel.add(new Tisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
-						anzahlStuehle, stuehle, stuehleOben, stuehleUnten, stuehleLinks, stuehleRechts));
+				moebel.add(
+						new Tisch(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten, anzahlStuehle,
+								stuehle, stuehleOben, stuehleUnten, stuehleLinks, stuehleRechts, keepoutGesetzt));
 			} else if (line.startsWith("Toilette")) {
-				moebel.add(new Toilette(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Toilette(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else if (line.startsWith("Waschbecken")) {
-				moebel.add(new Waschbecken(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten));
+				moebel.add(new Waschbecken(laenge, breite, keepoutLinks, keepoutRechts, keepoutOben, keepoutUnten,
+						keepoutGesetzt));
 			} else {
 				System.err.println("Unbekanntes Möbelstück: " + line);
+				System.exit(1);
 			}
 		}
 		reader.reset();
 	}
 
-	//Erstellt die Türen des Raumes | Übergabe des Readers, des Raumnamens und der Liste der Türen
+	// Erstellt die Türen des Raumes | Übergabe des Readers, des Raumnamens und der
+	// Liste der Türen
 	private static void parseTueren(BufferedReader reader, String raumName, List<TmpTuere> aktuelleTueren)
-			throws IOException {
+			throws Exception {
 		String line = reader.readLine();
-		while (line != null /*&& line != "" && !line.endsWith(":")*/) {
+		int counter = 0;
+		while (line != null /* && line != "" && !line.endsWith(":") */) {
 			line = line.trim();
-			if (line.isEmpty() || line.contains(":")) { //contains(), da Zeilen mit Türen keine Doppelpunkte enthalten
+			if (line.isEmpty() || line.contains(":")) { // contains(), da Zeilen mit Türen keine Doppelpunkte enthalten
 				reader.reset();
 				break;
 			}
 			aktuelleTueren.add(new TmpTuere(raumName, line, 0.92)); // Türbreite mit Rahmen
 			reader.mark(1000);
 			line = reader.readLine();
+			counter++;
 		}
+		if (counter >= 4)
+			throw new Exception("Zu viele Türen");
 	}
 
-	//Fügt die Türen dem Haus hinzu | Übergabe des Hauses und der Liste der Türen
+	// Fügt die Türen dem Haus hinzu | Übergabe des Hauses und der Liste der Türen
 	private static void addTuerenToHaus(Haus haus, List<TmpTuere> tueren) {
 		for (TmpTuere tuere : tueren) {
 			Raum raum1 = haus.getRaumByName(tuere.vonRaum);
@@ -278,7 +340,7 @@ public class FileParser {
 		}
 	}
 
-	//Klasse für temporäre Türen
+	// Klasse für temporäre Türen
 	private static class TmpTuere {
 		private String vonRaum;
 		private String inRaum;
