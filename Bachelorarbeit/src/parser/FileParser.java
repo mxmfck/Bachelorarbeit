@@ -174,8 +174,8 @@ public class FileParser {
 				if (keepoutValues.length == 4) {
 					keepoutLinks = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
 					keepoutRechts = Double.parseDouble(keepoutValues[1].trim().replace(',', '.'));
-					keepoutOben = Double.parseDouble(keepoutValues[2].trim().replace(',', '.'));
-					keepoutUnten = Double.parseDouble(keepoutValues[3].trim().replace(',', '.'));
+					keepoutUnten = Double.parseDouble(keepoutValues[2].trim().replace(',', '.'));
+					keepoutOben = Double.parseDouble(keepoutValues[3].trim().replace(',', '.'));
 				} else if (keepoutValues.length == 3) {
 					keepoutLinks = Double.parseDouble(keepoutValues[0].trim().replace(',', '.'));
 					keepoutRechts = Double.parseDouble(keepoutValues[2].trim().replace(',', '.'));
