@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Raum implements Cloneable{
+public abstract class Raum{
 //	Abstrakte Klasse für alle Räume
 	
 	private double laenge; //Länge des Raumes
@@ -24,36 +24,6 @@ public abstract class Raum implements Cloneable{
 		this.groesse = laenge * breite;
 	}
 
-//	@Override
-//    public Object clone() throws CloneNotSupportedException {
-//        Raum clonedRaum = (Raum) super.clone();
-//        
-//        // Tiefe Kopie der Möbelliste
-//        if (this.moebel != null) {
-//            clonedRaum.moebel = new ArrayList<>();
-//            for (Moebelstueck m : this.moebel) {
-//                clonedRaum.moebel.add((Moebelstueck) m.clone());
-//            }
-//        }
-//        
-//        // Tiefe Kopie der Türenliste
-//        if (this.tueren != null) {
-//            clonedRaum.tueren = new ArrayList<>();
-//            for (Tuer t : this.tueren) {
-//                Tuer clonedTuer = (Tuer) t.clone();
-//                // Aktualisiere die Raumreferenzen in der geklonten Tür
-//                if (t.getVonRaum() == this) {
-//                    clonedTuer.setVonRaum(clonedRaum);
-//                }
-//                if (t.getInRaum() == this) {
-//                    clonedTuer.setInRaum(clonedRaum);
-//                }
-//                clonedRaum.tueren.add(clonedTuer);
-//            }
-//        }
-//        
-//        return clonedRaum;
-//    }
 
 	//Getter für alle Attribute
 	public double getLaenge() {
@@ -76,13 +46,6 @@ public abstract class Raum implements Cloneable{
 		return tueren;
 	}
 	
-//	public double getX() {
-//		return x;
-//	}
-//	
-//	public double getY() {
-//		return y;
-//	}
 
 	//Methoden zum Hinzufügen von Möbelstücken und Türen
 	public void addMoebel(Moebelstueck moebel) {
@@ -108,25 +71,11 @@ public abstract class Raum implements Cloneable{
 		this.groesse = groesse;
 	}
 	
-//	public void setX(double x) {
-//		this.x = x;
-//	}
-//	
-//	public void setY(double y) {
-//		this.y = y;
-//	}
 
 	public String getName() {
 		return name;
 	}
 	
-//	public void setVonRaum(Tuer tuer, Raum raum) {
-//        tuer.setVonRaum(raum);
-//    }
-//	
-//	public void setInRaum(Tuer tuer, Raum raum) {
-//        tuer.setInRaum(raum);
-//    }
 
 	
 	public String toString() {

@@ -20,7 +20,7 @@ import model.Moebelstueck;
 public class GrundrissPanel extends JPanel {
 	private List<RaumModell> raeume;
 	private static final int SCALE = 50; // Skalierungsfaktor für die Darstellung
-	private static final int FIXED_OFFSET = 10; // Feste Verschiebung um 25 Pixel nach rechts und unten
+	private static final int FIXED_OFFSET = 10; // Feste Verschiebung um 10 Pixel nach rechts und unten
 	private int offsetX = 0; // Verschiebung entlang der X-Achse
 	private int offsetY = 0; // Verschiebung entlang der Y-Achse
 	private int WALL_THICKNESS = 0; // Dicke der Wände in Pixeln
@@ -60,6 +60,7 @@ public class GrundrissPanel extends JPanel {
 
 		// Zeichnen der Räume
 		for (RaumModell raum : raeume) {
+			
 			WALL_THICKNESS = (int) Math.round(raum.getWANDBREITE() * SCALE); // Dicke der Wände in Pixeln
 			int wandX = offsetX + (int) Math.round(raum.getX() * SCALE);
 			int wandY = offsetY + (int) Math.round(raum.getY() * SCALE);
@@ -72,27 +73,17 @@ public class GrundrissPanel extends JPanel {
 
 			// Zeichne die Außenwände des Raumes
 			g2d.setColor(Color.BLACK);
-			g2d.setStroke(new BasicStroke(WALL_THICKNESS * 2)); // Setzt die Dicke der Wände
+			g2d.setStroke(new BasicStroke(WALL_THICKNESS * 2)); // Setzt die Dicke der Wände 
 			g2d.drawRect(wandX, wandY, wandLaenge, wandBreite);
 
 			// Fülle das Innere des Raumes
 			g2d.setColor(Color.LIGHT_GRAY);
 			g2d.fillRect(raumX, raumY, raumLaenge, raumBreite);
+			
 
 			// Zeichne die Möbel im Raum
 			if (raum.getMoebel() != null) {
 				for (Moebelstueck moebel : raum.getMoebel()) {
-//					int moebelX = offsetX + (int) ((moebel.getX()) * SCALE);
-//					int moebelY = offsetY + (int) ((moebel.getY()) * SCALE);
-//					int moebelLaenge = (int) (moebel.getBreite() * SCALE);
-//					int moebelBreite = (int) (moebel.getLaenge() * SCALE);
-//
-//					g2d.setStroke(new BasicStroke(1));
-//					g2d.setColor(Color.LIGHT_GRAY);
-//					g2d.fillRect(moebelX, moebelY, moebelBreite, moebelLaenge);
-//					g2d.setColor(Color.BLACK);
-//					g2d.drawRect(moebelX, moebelY, moebelBreite, moebelLaenge);
-//					g2d.drawString(moebel.getClass().getSimpleName(), moebelX + 5, moebelY + 15);
 
 					try {
 						moebel.draw(g2d, raum, offsetX, offsetY, SCALE);
@@ -112,22 +103,26 @@ public class GrundrissPanel extends JPanel {
 
 				g2d.setStroke(new BasicStroke(fensterHoehe)); // Setzt die Strichstärke für Fenster auf 1 Pixel
 				if (fenster.isHorizontal()) {
-					g2d.setColor(Color.BLUE);
+					g2d.setColor(Color.WHITE);
 					g2d.drawLine(fensterX + WALL_THICKNESS, fensterY, fensterX + fensterBreite - WALL_THICKNESS,
 							fensterY);
+					g2d.setColor(Color.BLACK);
+					g2d.setStroke(new BasicStroke(1));
+					g2d.drawLine(fensterX, fensterY, fensterX + fensterBreite, fensterY);
 //					// Test
 //					g2d.setStroke(new BasicStroke(1)); // Setzt die Strichstärke für Türen auf 1 Pixel
 //					g2d.setColor(Color.RED);
 //					g2d.drawLine(fensterX, fensterY, fensterX + fensterBreite, fensterY);
 				} else {
-					g2d.setColor(Color.BLUE);
+					g2d.setColor(Color.WHITE);
 					g2d.drawLine(fensterX, fensterY + WALL_THICKNESS, fensterX,
 							fensterY + fensterBreite - WALL_THICKNESS);
+					g2d.setColor(Color.BLACK);
+					g2d.setStroke(new BasicStroke(1));
+					g2d.drawLine(fensterX, fensterY, fensterX, fensterY + fensterBreite);
 				}
 			}
 
-//			int centerX = wandX + wandLaenge / 2;
-//			int centerY = wandY + wandBreite / 2;
 
 			// Temporäre Transformation für normalen Text
 			AffineTransform originalTransform = g2d.getTransform();
@@ -152,10 +147,14 @@ public class GrundrissPanel extends JPanel {
 
 			// Zeichne die Umrandung (schwarzer Text leicht versetzt in alle Richtungen)
 			g2d.setColor(Color.BLACK);
-			g2d.drawString(raumText, centerX - textWidth / 2 - outlineOffset, height - (centerY + textHeight / 4 - outlineOffset));
-			g2d.drawString(raumText, centerX - textWidth / 2 + outlineOffset, height - (centerY + textHeight / 4 - outlineOffset));
-			g2d.drawString(raumText, centerX - textWidth / 2 - outlineOffset, height - (centerY + textHeight / 4 + outlineOffset));
-			g2d.drawString(raumText, centerX - textWidth / 2 + outlineOffset, height - (centerY + textHeight / 4 + outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 - outlineOffset,
+					height - (centerY + textHeight / 4 - outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 + outlineOffset,
+					height - (centerY + textHeight / 4 - outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 - outlineOffset,
+					height - (centerY + textHeight / 4 + outlineOffset));
+			g2d.drawString(raumText, centerX - textWidth / 2 + outlineOffset,
+					height - (centerY + textHeight / 4 + outlineOffset));
 
 			// Zeichne den weißen Text zentriert im Raum
 			g2d.setColor(Color.WHITE);

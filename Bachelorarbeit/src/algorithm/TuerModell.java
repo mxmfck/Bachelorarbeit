@@ -17,7 +17,6 @@ public class TuerModell implements Cloneable {
 	private double y; // y-Koordinate der Tür
 	private boolean linksOeffnend; // Gibt an, ob die Tür links öffnend ist
 	private boolean horizontal;
-//	private double dicke;
 
 	public TuerModell(Raum vonRaum, Raum inRaum, double breite) {
 		this.vonRaum = vonRaum;
@@ -25,24 +24,6 @@ public class TuerModell implements Cloneable {
 		this.breite = Math.round(breite * 100.0) / 100.0;
 	}
 
-//	public TuerModell(Raum vonRaum, Raum inRaum, double breite, double dicke, boolean horizontal) {
-//		this.vonRaum = vonRaum;
-//		this.inRaum = inRaum;
-//		this.breite = Math.round(breite*100.0)/100.0;
-//		this.dicke = Math.round(dicke*100.0)/100.0;
-//		this.horizontal = horizontal;
-//	}
-
-//	 @Override
-//	    public Object clone() throws CloneNotSupportedException {
-//	        Tuer clonedTuer = (Tuer) super.clone();
-//	        
-//	         clonedTuer.vonRaum = this.vonRaum;
-//	         clonedTuer.inRaum = this.inRaum;
-//
-//	        
-//	        return clonedTuer;
-//	    }
 
 	// Getter für alle Attribute
 	public Raum getVonRaum() {
@@ -203,15 +184,4 @@ public class TuerModell implements Cloneable {
 		}
 	}
 
-//	public double getDicke() {
-//		return dicke;
-//	}
-
-//	public void setVonRaum(Raum raum) {
-//        this.vonRaum = raum;
-//    }
-//	
-//	public void setInRaum(Raum raum) {
-//        this.inRaum = raum;
-//    }
 }

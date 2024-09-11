@@ -13,7 +13,6 @@ public class Grundriss {
 	private List<RaumModell> raeume; // Liste aller Räume im Grundriss
 	private List<RaumModell> raeumeLinks; // Liste aller Räume links des Flurs
 	private List<RaumModell> raeumeRechts; // Liste aller Räume rechts des Flurs
-//    private List<Raum> tmpRaeume;
 
 	private double xLinks = 0; // x-Koordinate an dem der Raum auf den Flur trifft
 	private double yLinks = 0; // Aktuelle y-Koordinate der Breite der Räume links des Flurs
@@ -22,7 +21,7 @@ public class Grundriss {
 	private double maxRechts = 0; // Maximale x-Koordinate der Räume rechts des Flurs
 	private double maxLinks = 0; // Maximale x-Koordinate der Räume links des Flurs
 	private boolean linksPlaziert; // Gibt an, ob der letzte Raum links oder rechts platziert wurde
-	private final double WANDBREITE = 0.1;
+	private final double WANDBREITE = 0.1; 
 
 	public Grundriss(Haus haus) {
 		berechneGrundriss(haus);
@@ -95,7 +94,6 @@ public class Grundriss {
 					tueren.add(new TuerModell(tuer.getVonRaum(), tuer.getInRaum(), tuer.getBreite()));
 				}
 
-//				flur.addTuer(new Tuer(null, flur, 0.92));
 				RaumModell flurModell = new RaumModell(flur.getName(), flur.getLaenge(), flur.getBreite(),
 						flur.getMoebel(), tueren, 0 + WANDBREITE, 0 + WANDBREITE);
 				raeume.add(flurModell);
@@ -335,11 +333,6 @@ public class Grundriss {
 	private void platziereTuerObenUnten(TuerModell tuer, TuerModell vonRaumTuer, RaumModell inRaum, RaumModell vonRaum,
 			boolean vonRaumUeberInRaum, boolean istLinks) {
 		
-		//TODO remove
-//		if(inRaum.getName().equals("Küche")) {
-//			System.out.println("Küche");
-//        
-//		}
 		
 		switch (Double.compare(inRaum.getLaenge() - vonRaum.getLaenge(), 0.0)) {
 		
@@ -449,14 +442,14 @@ public class Grundriss {
 	private void platziereFensterImErstenRaum(RaumModell raum, boolean istLinks) {
 		platziereFenster(raum, true, raum.getRaumX(), raum.getY());
 		platziereFenster(raum, false, istLinks ? raum.getX() : raum.getX() + raum.getLaenge() ,
-				raum.getRaumY()); // Test
+				raum.getRaumY()); 
 	}
 
 	// Platziert Fenster im letzten Raum
 	private void platziereFensterImLetztenRaum(RaumModell raum, boolean istLinks) {
 		platziereFenster(raum, true, raum.getRaumX(), raum.getY() + raum.getBreite() );
 		platziereFenster(raum, false, istLinks ? raum.getX()  : raum.getX() + raum.getLaenge() ,
-				raum.getRaumY()); // Test
+				raum.getRaumY()); 
 	}
 
 	// Platziert Fenster in mittleren Räumen
@@ -486,7 +479,7 @@ public class Grundriss {
 				}
 			}
 		} else {// oben
-			if (istLinks) { // Fenster oben //TODO Fenst oben position gut?
+			if (istLinks) { // Fenster oben 
 				if (raum.getLaenge() < raum.getBreite()) {
 					raum.addFenster(new Fenster(raum.getRaumX() + (raum.getRaumLaenge() - 0.8) / 2,
 							raum.getY() + raum.getBreite() , 0.8, true));

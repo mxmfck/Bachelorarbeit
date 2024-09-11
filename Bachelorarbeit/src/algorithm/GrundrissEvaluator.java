@@ -10,17 +10,12 @@ public class GrundrissEvaluator {
 	double bestesErgebnis = Double.MAX_VALUE;
 	
 	for (int i = 0; i < 100; i++) {
-//		try {
-//			Haus hausClone = (Haus) haus.clone();
 			Grundriss grundriss = new Grundriss(haus);
 			double ergebnis = berechneErgebnis(grundriss);
 			if (ergebnis < bestesErgebnis) {
 				bestesErgebnis = ergebnis;
 				besterGrundriss = grundriss;
 			}
-//		} catch (CloneNotSupportedException e) {
-//			e.printStackTrace();
-//		}
 		
 	}
 	

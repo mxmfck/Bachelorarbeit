@@ -51,9 +51,6 @@ public class FileParser {
 			while ((line = reader.readLine()) != null) {
 				line = line.trim(); // Entfernt Leerzeichen am Anfang und Ende der Zeile
 				if (line.endsWith(":")) { // Wenn die Zeile mit einem Doppelpunkt endet, wird ein neuer Raum erstellt
-//					if (aktuellerRaum != null) {
-//						haus.addRaum(aktuellerRaum);
-//					}
 					String raumName = line.substring(0, line.length() - 1); // Speichert den Namen des Raumes
 					aktuellerRaum = createRaum(reader, raumName, aktuelleTueren); // Erstellt den Raum
 					if (aktuellerRaum != null) {
@@ -88,7 +85,7 @@ public class FileParser {
 			line = line.trim();
 			if (line.isEmpty()) { // removed || line.endsWith(":")
 //				reader.reset();
-				break; // removed Works?
+				break; 
 			}
 			switch (line.split(":")[0]) { // Switch-Case für die verschiedenen Anforderungen
 			case "Größe":
@@ -142,7 +139,7 @@ public class FileParser {
 					* (m.getKeepOutOben() + m.getKeepOutUnten() + m.getBreite());
 		}
 		if (moebelFlaeche > laenge * breite) {
-			System.err.println("Möbel nehmen mehr Platz ein als vorhanden");
+			System.err.println("Möbel im Raum \""+raumName+"\" nehmen mehr Platz ein als vorhanden");
 			System.exit(1);
 		}
 		return raum;
@@ -254,15 +251,15 @@ public class FileParser {
 					case "Stühle":
 						anzahlStuehle = Integer.parseInt(additionalInfo.split(":")[1].trim());
 						for (int i = 0; i < anzahlStuehle; i++) {
-							stuehle.add(new Stuhl(0.5, 0.5, 0, 0, 0, 0)); // TODO Werte
+							stuehle.add(new Stuhl(0.5, 0.5, 0, 0, 0, 0));
 						}
 						break;
 
 					case "Position":
 
-						if (!additionalInfo.split(":")[1].matches("[oulr,]*")) {
+						if (!additionalInfo.split(":")[1].matches("[oulr, ]*")) {
 							throw new IllegalArgumentException(
-									"Ungültige Zeichen in der Positionsangabe. Erlaubt sind nur o, u, l, r und ,.");
+									"Ungültige Zeichen in der Positionsangabe. Erlaubt sind nur o, u, l, r und ,");
 						}
 
 						if (additionalInfo.split(":")[1].contains("o")) {
@@ -317,7 +314,7 @@ public class FileParser {
 				reader.reset();
 				break;
 			}
-			aktuelleTueren.add(new TmpTuere(raumName, line, 0.92)); // Türbreite mit Rahmen
+			aktuelleTueren.add(new TmpTuere(raumName, line, 0.92)); // Türbreite 0.92m
 			reader.mark(1000);
 			line = reader.readLine();
 			counter++;

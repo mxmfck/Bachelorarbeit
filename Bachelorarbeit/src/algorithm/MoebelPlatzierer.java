@@ -125,8 +125,8 @@ public class MoebelPlatzierer {
 					blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
 							m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 							m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-					System.out.println(
-							m.getClass().getSimpleName() + " im Raum platziert: x=" + m.getX() + ", y=" + m.getY());
+//					System.out.println(
+//							m.getClass().getSimpleName() + " im Raum platziert: x=" + m.getX() + ", y=" + m.getY());
 					return true;
 				}
 			}
@@ -158,8 +158,8 @@ public class MoebelPlatzierer {
 				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
 						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-				System.out.println(
-						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+//				System.out.println(
+//						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
 				return true;
 			}
 		}
@@ -177,8 +177,8 @@ public class MoebelPlatzierer {
 				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
 						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-				System.out.println(
-						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+//				System.out.println(
+//						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
 				return true;
 			}
 		}
@@ -196,8 +196,8 @@ public class MoebelPlatzierer {
 				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
 						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-				System.out.println(
-						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+//				System.out.println(
+//						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
 				return true;
 			}
 		}
@@ -214,8 +214,8 @@ public class MoebelPlatzierer {
 				blockierteBereiche.add(new BlockierterBereich(m.getX() - m.getKeepOutLinks(),
 						m.getY() - m.getKeepOutUnten(), m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 						m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-				System.out.println(
-						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
+//				System.out.println(
+//						m.getClass().getSimpleName() + " an Wand platziert: x=" + m.getX() + ", y=" + m.getY());
 				return true;
 			}
 		}
@@ -258,8 +258,8 @@ public class MoebelPlatzierer {
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
 
-						System.out.println(
-								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+//						System.out.println(
+//								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 				}
@@ -277,8 +277,8 @@ public class MoebelPlatzierer {
 								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-						System.out.println(
-								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+//						System.out.println(
+//								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 				}
@@ -297,8 +297,8 @@ public class MoebelPlatzierer {
 								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-						System.out.println(
-								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+//						System.out.println(
+//								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 				}
@@ -316,8 +316,8 @@ public class MoebelPlatzierer {
 								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-						System.out.println(
-								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+//						System.out.println(
+//								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 				}
@@ -337,8 +337,8 @@ public class MoebelPlatzierer {
 								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-						System.out.println(
-								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+//						System.out.println(
+//								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 					while (m.getAusrichtung() != 0)
@@ -355,8 +355,8 @@ public class MoebelPlatzierer {
 									m.getY() - m.getKeepOutUnten(),
 									m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 									m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
-									+ ", y=" + m.getY());
+//							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
+//									+ ", y=" + m.getY());
 							return true;
 						}
 					}
@@ -376,8 +376,8 @@ public class MoebelPlatzierer {
 								new BlockierterBereich(m.getX() - m.getKeepOutLinks(), m.getY() - m.getKeepOutUnten(),
 										m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 										m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-						System.out.println(
-								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
+//						System.out.println(
+//								m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX() + ", y=" + m.getY());
 						return true;
 					}
 					while (m.getAusrichtung() != 0)
@@ -395,8 +395,8 @@ public class MoebelPlatzierer {
 									m.getY() - m.getKeepOutUnten(),
 									m.getLaenge() + m.getKeepOutLinks() + m.getKeepOutRechts(),
 									m.getBreite() + m.getKeepOutOben() + m.getKeepOutUnten()));
-							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
-									+ ", y=" + m.getY());
+//							System.out.println(m.getClass().getSimpleName() + " in Ecke platziert: x=" + m.getX()
+//									+ ", y=" + m.getY());
 							return true;
 						}
 					}

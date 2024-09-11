@@ -5,7 +5,6 @@
 //
 //import model.Haus;
 //import model.Raum;
-//import model.RaumModell;
 //
 //public class SpiralBasedGrundriss {
 //

@@ -62,7 +62,7 @@ public class Haus {
 		frame.add(new JScrollPane(grundrissPanel));
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+//		frame.setVisible(true);
 
 		grundrissPanel.revalidate();
 		grundrissPanel.doLayout();
@@ -98,7 +98,7 @@ public class Haus {
 				return raum;
 			}
 		}
-		throw new IllegalArgumentException("Raum nicht gefunden");
+		throw new IllegalArgumentException("Fehler beim Suchen des Raumes. Raum nicht gefunden");
 	}
 
 	public String toString() { // Methode zur Validirierung des Inputs
@@ -126,7 +126,7 @@ public class Haus {
 			ImageIO.write(image, "png", new File(filename));
 			System.out.println("Bild gespeichert als: " + filename);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Fehler beim Speichern des Bildes.");
 		}
 	}
 }

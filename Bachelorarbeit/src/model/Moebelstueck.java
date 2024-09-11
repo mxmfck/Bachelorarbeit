@@ -33,11 +33,6 @@ public abstract class Moebelstueck {
 	
 	
 	
-//	@Override
-//    public Object clone() throws CloneNotSupportedException {
-//        return super.clone();
-//    }
-	
 
 	// Getter für alle Attribute
 	public double getLaenge() {

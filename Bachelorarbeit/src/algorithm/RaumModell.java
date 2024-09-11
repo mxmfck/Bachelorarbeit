@@ -20,7 +20,7 @@ public class RaumModell{
 	private double raumY;
 	private double raumLaenge;
 	private double raumBreite;
-	private final double WANDBREITE = 0.1;
+	private final double WANDBREITE = 0.1; 
 
 	public RaumModell(String name, double laenge, double breite, List<Moebelstueck> moebel, List<TuerModell> tueren, double x,
 			double y) {
