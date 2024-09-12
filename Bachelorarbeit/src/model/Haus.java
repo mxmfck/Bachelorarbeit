@@ -68,6 +68,7 @@ public class Haus {
 		grundrissPanel.doLayout();
 
 		SwingUtilities.invokeLater(() -> savePanelasImage(grundrissPanel, "grundriss.png"));
+		
 
 	}
 
@@ -127,6 +128,8 @@ public class Haus {
 			System.out.println("Bild gespeichert als: " + filename);
 		} catch (IOException e) {
 			System.out.println("Fehler beim Speichern des Bildes.");
+		} finally {
+			System.exit(0);
 		}
 	}
 }
