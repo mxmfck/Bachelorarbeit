@@ -1,0 +1,49 @@
+Abstellkammer:
+  Maße: 5x5
+  Möbel:
+    Sofa: 3x1
+        Keepout: 1,5
+    Kommode: 1x0,5
+        Keepout: 0;0;1;0
+  Türen:
+    Flur
+
+Küche:
+  Möbel:
+    Herd: 1x1
+        Keepout: 0;0;1;0
+    Spüle: 1x1
+        Keepout: 0;0;1;0
+    Kühlschrank: 1x1
+	Keepout: 1
+    Tisch: 1x1
+    	Keepout: 0.7;0.7;0.7;0
+    	Stühle: 3
+        Position: l,r,u
+  Türen:
+    Flur
+  Maße: 5x5
+
+Schlafzimmer 1:
+  Türen:
+    Flur
+  Maße: 5x5
+  Möbel:
+    Bett: 1x2
+        Keepout: 1;1;1;0
+    Schrank: 3x1
+        Keepout: 0;0;1;0
+    Kommode: 1,5x0,5
+        Keepout: 0;0;1;0
+
+Badezimmer:
+  Maße: 4x5
+  Türen:
+    Flur
+  Möbel:
+    Waschbecken: 0,7x0,6
+    	Keepout: 0;0;1;0
+    Dusche: 1x1
+        Keepout: 0;0;1;0
+    Toilette: 0,4x0,7
+        Keepout: 0,5;0,5;0,5;0

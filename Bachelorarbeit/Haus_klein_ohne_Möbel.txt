@@ -1,0 +1,19 @@
+Wohnzimmer:
+  Maße: 5x5
+  Türen:
+    Flur
+
+Küche:
+  Türen:
+    Flur
+  Maße: 5x5
+
+Schlafzimmer 1:
+  Türen:
+    Flur
+  Maße: 5x5
+
+Badezimmer:
+  Maße: 4x5
+  Türen:
+    Flur
