@@ -46,6 +46,7 @@ public class Haus {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block | Fehlerbehandlung
 			e.printStackTrace();
+			System.exit(1);
 		}
 
 		Grundriss grundriss = GrundrissEvaluator.findeBestenGrundriss(this); // Erstellung eines Grundrisses auf Basis
